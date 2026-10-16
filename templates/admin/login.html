@@ -1,0 +1,54 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}Acceso | Administración del restaurante{% endblock %}
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/admin-login.css' %}">
+{% endblock %}
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+{% block usertools %}{% endblock %}
+{% block nav-global %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+{% block content_title %}{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+
+{% block content %}
+<main class="restaurant-login">
+    <header class="restaurant-login-heading">
+        <span class="restaurant-login-mark" aria-hidden="true">R</span>
+        <span class="restaurant-login-kicker">PANEL DE ADMINISTRACIÓN</span>
+        <h1>Administración del restaurante</h1>
+        <p>Ingresa con tus credenciales para continuar.</p>
+    </header>
+
+    <div class="restaurant-login-content">
+        {% if form.errors and not form.non_field_errors %}
+        <p class="errornote">{% translate "Please correct the error below." %}</p>
+        {% endif %}
+        {% for error in form.non_field_errors %}
+        <p class="errornote">{{ error }}</p>
+        {% endfor %}
+        {% if user.is_authenticated %}
+        <p class="errornote">
+            Ya iniciaste sesión como {{ username }}, pero no tienes permiso para acceder aquí.
+        </p>
+        {% endif %}
+
+        <form action="{{ app_path }}" method="post" id="login-form">
+            {% csrf_token %}
+            <div class="restaurant-login-field">
+                {{ form.username.errors }}
+                <label for="{{ form.username.id_for_label }}">Nombre de usuario</label>
+                {{ form.username }}
+            </div>
+            <div class="restaurant-login-field">
+                {{ form.password.errors }}
+                <label for="{{ form.password.id_for_label }}">Contraseña</label>
+                {{ form.password }}
+                <input type="hidden" name="next" value="{{ next }}">
+            </div>
+            <button type="submit">Iniciar sesión</button>
+        </form>
+    </div>
+</main>
+{% endblock %}

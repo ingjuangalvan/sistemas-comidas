@@ -1,0 +1,159 @@
+body.login {
+    min-height: 100vh;
+    padding: 24px;
+    background:
+        radial-gradient(ellipse at 8% 8%, #ffffff12, transparent 30rem),
+        linear-gradient(145deg, #173c2a, #285a40 64%, #36704c);
+}
+
+body.login #container {
+    width: 100%;
+    min-width: 0;
+    max-width: 460px;
+    margin: auto;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #ffffff26;
+    border-radius: 18px;
+    background: #f7f9f5;
+    box-shadow: 0 24px 70px #0e241a55;
+}
+
+body.login #header {
+    display: none;
+}
+
+body.login #content {
+    width: auto;
+    margin: 0;
+    padding: 0;
+}
+
+body.login #content-main {
+    float: none;
+    width: auto;
+    max-width: none;
+    margin: 0;
+}
+
+.restaurant-login-heading {
+    padding: 30px 34px 25px;
+    background: linear-gradient(135deg, #24553e, #183d2d);
+    color: #fff;
+    text-align: center;
+}
+
+.restaurant-login-mark {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 16px;
+    place-items: center;
+    border-radius: 15px;
+    background: #e0ef9d;
+    color: #183d2d;
+    font-family: Georgia, serif;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.restaurant-login-kicker {
+    color: #d1e0d2;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+}
+
+.restaurant-login-heading h1 {
+    margin: 10px 0 7px;
+    color: #fff;
+    font-size: clamp(22px, 6vw, 28px);
+    line-height: 1.2;
+}
+
+.restaurant-login-heading p {
+    margin: 0;
+    color: #d1e0d2;
+    font-size: 13px;
+}
+
+.restaurant-login-content {
+    padding: 28px 34px 32px;
+}
+
+.restaurant-login-field {
+    margin-bottom: 18px;
+}
+
+.restaurant-login-field label {
+    display: block;
+    margin-bottom: 7px;
+    color: #26372c;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.restaurant-login-field input {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 1px solid #cbd6cb;
+    border-radius: 9px;
+    background: #fff;
+    color: #202820;
+    font: inherit;
+}
+
+.restaurant-login-field input:focus {
+    border-color: #4c805d;
+    outline: 3px solid #4c805d2e;
+}
+
+#login-form button {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 4px;
+    border: 0;
+    border-radius: 9px;
+    background: #24553e;
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#login-form button:hover {
+    background: #183d2d;
+}
+
+body.login .errornote,
+body.login .restaurant-login-field .errorlist {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0 0 16px;
+    padding: 10px 12px;
+    border: 1px solid #f0c8bd;
+    border-radius: 8px;
+    background: #fff2ef;
+    color: #8d342c;
+    font-size: 13px;
+}
+
+@media (max-width: 480px) {
+    body.login {
+        padding: 16px;
+    }
+
+    body.login #container {
+        border-radius: 15px;
+    }
+
+    .restaurant-login-heading {
+        padding: 25px 20px 22px;
+    }
+
+    .restaurant-login-content {
+        padding: 24px 20px 26px;
+    }
+}
