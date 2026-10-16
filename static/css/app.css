@@ -656,6 +656,21 @@ h2 {
     font-weight: 700
 }
 
+.logout-form {
+    display: block;
+    margin-top: 4px
+}
+
+.logout-nav-item {
+    width: 100%;
+    color: var(--muted)
+}
+
+.logout-nav-item:hover {
+    background: #f7f7f2;
+    color: var(--ink)
+}
+
 .nav-count {
     margin-left: auto;
     background: var(--orange);

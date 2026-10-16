@@ -22,11 +22,13 @@
                 <button class="nav-item" data-view="products"><span>▧</span> Carta</button>
             <button class="nav-item" data-view="cash"><span>◉</span> Caja</button>
             <button class="nav-item" data-view="reports"><span>▥</span> Informes</button>
+            <form class="logout-form" method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="nav-item logout-nav-item" type="submit"><span>↗</span> Cerrar sesión</button>
+            </form>
         </nav>
         <div class="sidebar-bottom">
                 <div class="admin-identity"><span class="avatar">{{ request.user.username|slice:':1'|upper }}</span><span><b>{{ request.user.username }}</b><small>Administrador</small></span></div>
-            <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="logout-button"
-                    type="submit">Cerrar sesión ↗</button></form>
         </div>
     </aside>
     <main class="admin-main">
