@@ -1,0 +1,119 @@
+.reconciliation-entry {
+    border: 1px solid var(--line);
+    background: #fff;
+    padding: 16px
+}
+
+.reconciliation-note,
+.reconciliation-explanation {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.55;
+    margin: 10px 0 12px
+}
+
+.verification-table {
+    display: grid;
+    border-top: 1px solid var(--line)
+}
+
+.verification-head,
+.verification-row,
+.verification-total {
+    display: grid;
+    grid-template-columns: minmax(100px, 1.1fr) repeat(3, minmax(90px, 1fr));
+    align-items: center;
+    gap: 10px;
+    padding: 9px 6px;
+    border-bottom: 1px solid var(--line);
+    font-size: 11px
+}
+
+.verification-head {
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .6px
+}
+
+.verification-row strong {
+    font-size: 11px
+}
+
+.verification-row input {
+    width: 100%;
+    min-width: 70px;
+    height: 32px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 5px 8px;
+    text-align: right
+}
+
+.verification-row output,
+.verification-total strong:last-child {
+    text-align: right
+}
+
+.verification-total {
+    border-bottom: 0;
+    background: #f7f8f2;
+    font-weight: 700
+}
+
+.difference-positive {
+    color: #24633c !important;
+    font-weight: 700
+}
+
+.difference-negative {
+    color: #b2432d !important;
+    font-weight: 700
+}
+
+.difference-zero {
+    color: var(--green) !important;
+    font-weight: 700
+}
+
+.reconciliation-explanation {
+    margin-bottom: 0
+}
+
+.cash-reconcile-item {
+    white-space: normal;
+    padding: 7px 0;
+    border-top: 1px solid var(--line);
+    line-height: 1.5
+}
+
+.cash-reconcile-item small {
+    display: block;
+    color: var(--muted);
+    line-height: 1.5
+}
+
+@media(max-width:680px) {
+    .reconciliation-entry {
+        padding: 12px
+    }
+
+    .verification-head,
+    .verification-row,
+    .verification-total {
+        grid-template-columns: minmax(65px, .9fr) repeat(3, minmax(66px, 1fr));
+        gap: 5px;
+        padding: 8px 2px;
+        font-size: 9px
+    }
+
+    .verification-head {
+        font-size: 7px
+    }
+
+    .verification-row input {
+        min-width: 0;
+        height: 29px;
+        padding: 3px
+    }
+}

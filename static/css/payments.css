@@ -1,0 +1,36 @@
+.payment-dialog {
+    width: min(420px, calc(100% - 28px));
+    padding: 25px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 24px 70px #0003
+}
+
+.payment-dialog::backdrop {
+    background: #10191180
+}
+
+.payment-dialog h2 {
+    font-size: 24px;
+    margin: 7px 0 20px
+}
+
+.payment-dialog .field-label {
+    font-size: 11px
+}
+
+.payment-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px
+}
+
+@media(max-width:680px) {
+    .payment-dialog-actions .button {
+        flex: 1;
+        padding: 10px 8px
+    }
+}

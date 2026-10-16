@@ -1,0 +1,229 @@
+{% extends 'orders/base.html' %}
+{% load static %}
+{% block title %}Panel | {{ business_name }}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/payments.css' %}">
+<link rel="stylesheet" href="{% static 'css/cash-denominations.css' %}">
+<link rel="stylesheet" href="{% static 'css/cash-reconciliation.css' %}">
+<link rel="stylesheet" href="{% static 'css/cash-history-reconcile.css' %}">
+<link rel="stylesheet" href="{% static 'css/panel-products.css' %}">
+<link rel="stylesheet" href="{% static 'css/report-charts.css' %}">
+{% endblock %}
+{% block content %}
+<div class="admin-shell">
+    <aside class="sidebar" id="sidebar">
+        <a class="brand" href="{% url 'panel' %}"><span class="brand-mark">{{ business_name|slice:':1' }}</span><span>{{ business_name }}<small>CONTROL DEL LOCAL</small></span></a>
+        <div class="side-label">OPERACIÓN</div>
+        <nav class="side-nav" aria-label="Navegación principal">
+            <button class="nav-item is-active" data-view="overview"><span>◫</span> Resumen</button>
+            <button class="nav-item" data-view="orders"><span>▤</span> Pedidos <b class="nav-count"
+                    id="nav-order-count">0</b></button>
+            <button class="nav-item" data-view="kitchen"><span>♨</span> Cocina</button>
+                <button class="nav-item" data-view="products"><span>▧</span> Carta</button>
+            <button class="nav-item" data-view="cash"><span>◉</span> Caja</button>
+            <button class="nav-item" data-view="reports"><span>▥</span> Informes</button>
+        </nav>
+        <div class="sidebar-bottom">
+                <div class="admin-identity"><span class="avatar">{{ request.user.username|slice:':1'|upper }}</span><span><b>{{ request.user.username }}</b><small>Administrador</small></span></div>
+            <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="logout-button"
+                    type="submit">Cerrar sesión ↗</button></form>
+        </div>
+    </aside>
+    <main class="admin-main">
+        <header class="admin-topbar"><button class="mobile-menu icon-button" id="mobile-menu"
+                aria-label="Abrir menú">☰</button>
+            <div><span class="eyebrow" id="date-label"></span>
+                <h1 id="page-title">Resumen del día</h1>
+            </div>
+            <div class="topbar-right"><a class="button button-light" href="/" target="_blank">Ver carta ↗</a><span
+                    class="avatar avatar-small">{{ request.user.username|slice:':1'|upper }}</span></div>
+        </header>
+        <section class="view-panel is-visible" id="view-overview">
+            <div class="metric-grid">
+                <article class="metric"><span>VENTAS PAGADAS</span><strong id="metric-sales">$0</strong><small
+                        id="metric-sales-note">Hoy</small><i>↗</i></article>
+                <article class="metric"><span>PEDIDOS DE HOY</span><strong id="metric-orders">0</strong><small
+                        id="metric-pending">0 pendientes de pago</small><i>▤</i></article>
+                <article class="metric"><span>PEDIDOS ACTIVOS</span><strong
+                        id="metric-active">0</strong><small>Esperando atención</small><i>◷</i></article>
+                <article class="metric metric-accent"><span>CAJA ACTUAL</span><strong
+                        id="metric-cash">Cerrada</strong><small id="metric-cash-note">Abre tu turno para
+                        empezar</small><i>◉</i></article>
+            </div>
+            <div class="section-heading">
+                <div><span class="eyebrow">EN TIEMPO REAL</span>
+                    <h2>Pedidos recientes</h2>
+                </div><button class="text-button" data-jump="orders">Ver todos →</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>PEDIDO</th>
+                            <th>CLIENTE</th>
+                            <th>TIPO</th>
+                            <th>ESTADO</th>
+                            <th>TOTAL</th>
+                            <th>HORA</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-orders">
+                        <tr>
+                            <td colspan="7" class="empty-row">Todavía no hay pedidos.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="quick-strip"><span class="live-dot"></span> Actualización automática cada 12 segundos <span
+                    class="strip-divider">·</span><a href="/django-admin/">Gestionar productos y categorías ↗</a></div>
+        </section>
+        <section class="view-panel" id="view-orders">
+            <div class="section-heading section-heading-top">
+                <div><span class="eyebrow">GESTIÓN DE VENTAS</span>
+                    <h2>Todos los pedidos</h2>
+                </div><button class="button button-light" id="refresh-orders">↻ Actualizar</button>
+            </div>
+            <div class="filter-tabs" id="order-filters"><button class="filter-tab is-active"
+                    data-filter="all">Todos</button><button class="filter-tab"
+                    data-filter="received">Recibidos</button><button class="filter-tab" data-filter="preparing">En
+                    preparación</button><button class="filter-tab" data-filter="ready">Preparados</button><button
+                    class="filter-tab" data-filter="delivered">Entregados</button></div>
+            <div class="order-search-filters">
+                <label class="field-label">Número de pedido
+                    <input id="order-number-filter" type="search" placeholder="Buscar número de pedido">
+                </label>
+                <label class="field-label">Desde
+                    <input id="order-date-from" type="date">
+                </label>
+                <label class="field-label">Hasta
+                    <input id="order-date-to" type="date">
+                </label>
+                <button class="button button-light" id="clear-order-filters" type="button">Limpiar filtros</button>
+            </div>
+            <div id="orders-list" class="orders-list"></div>
+        </section>
+        <section class="view-panel" id="view-kitchen">
+            <div class="section-heading section-heading-top">
+                <div><span class="eyebrow">VISTA DE PRODUCCIÓN</span>
+                    <h2>Comandas de cocina</h2>
+                </div>
+                <div class="live-badge"><span class="live-dot"></span> En vivo</div>
+            </div>
+            <div class="kitchen-board" id="kitchen-board"></div>
+        </section>
+        <section class="view-panel" id="view-cash">
+            <div class="section-heading section-heading-top">
+                <div><span class="eyebrow">CONTROL DE TURNO</span>
+                    <h2>Caja</h2>
+                </div><span class="status-chip" id="cash-status-chip">Caja cerrada</span>
+            </div>
+            <div id="cash-content"></div>
+            <div class="section-heading section-heading-top history-heading">
+                <div><span class="eyebrow">HISTORIAL</span>
+                    <h2>Cierres anteriores</h2>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>APERTURA</th>
+                            <th>FONDO INICIAL</th>
+                            <th>EFECTIVO CONTADO</th>
+                            <th>DIFERENCIA</th>
+                            <th>DESGLOSE</th>
+                            <th>CONCILIACIÓN Y OBSERVACIONES</th>
+                            <th>DOCUMENTO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cash-history">
+                        <tr>
+                            <td colspan="7" class="empty-row">Sin cierres registrados.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section class="view-panel" id="view-products">
+            <div class="section-heading section-heading-top">
+                <div><span class="eyebrow">CARTA DEL LOCAL</span><h2>Productos</h2></div>
+                <button class="button button-primary" id="add-product-button" type="button">＋ Agregar producto</button>
+            </div>
+            <div class="product-toolbar">
+                <label class="field-label">Buscar producto<input id="product-search" type="search" placeholder="Nombre o descripción"></label>
+                <label class="field-label product-category-filter">Categoría<select id="product-category-filter"><option value="">Todas las categorías</option>{% for category in product_categories %}<option value="{{ category.id }}">{{ category.name }}{% if not category.active %} (inactiva){% endif %}</option>{% endfor %}</select></label>
+                <span id="product-count" class="muted"></span>
+            </div>
+            <p id="product-feedback" class="product-feedback" role="status"></p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>PRODUCTO</th><th>CATEGORÍA</th><th>PRECIO COP</th><th>ESTADO EN CARTA</th><th>VENTAS</th><th>ACCIONES</th></tr></thead>
+                    <tbody id="products-list"><tr><td colspan="6" class="empty-row">Cargando productos...</td></tr></tbody>
+                </table>
+            </div>
+            <p class="product-footnote">Los productos con ventas se retiran marcándolos como agotados; así se conserva el detalle de pedidos anteriores.</p>
+        </section>
+        <section class="view-panel" id="view-reports">
+            <div class="section-heading section-heading-top">
+                <div><span class="eyebrow">RENDIMIENTO DEL NEGOCIO</span>
+                    <h2>Informes de ventas</h2>
+                </div>
+            </div>
+            <form class="report-filters" id="report-form"><label class="field-label">Desde<input type="date"
+                        name="start" required></label><label class="field-label">Hasta<input type="date" name="end"
+                        required></label><button class="button button-primary" type="submit">Consultar</button><button
+                    class="button button-light" id="export-csv" type="button">↓ Exportar CSV</button></form>
+            <div id="report-content"></div>
+        </section>
+        <footer class="admin-footer">{{ business_name }} <span>· Recibos internos no fiscales</span></footer>
+    </main>
+</div>
+<div id="toast" class="toast" role="status"></div>
+<dialog class="product-dialog" id="product-dialog" aria-labelledby="product-dialog-title">
+    <form id="product-form">
+        <span class="eyebrow">CARTA DEL LOCAL</span>
+        <h2 id="product-dialog-title">Agregar producto</h2>
+        <label class="field-label">Nombre<input name="name" required maxlength="120"></label>
+        <label class="field-label">Categoría<select name="category_id" required></select></label>
+        <label class="field-label">Descripción<input name="description" maxlength="240"></label>
+        <label class="field-label">Precio en COP<input name="price" type="number" min="0" step="0.01" required></label>
+        <div class="product-switches"><label><input name="available" type="checkbox" checked> Disponible para pedir</label><label><input name="featured" type="checkbox"> Destacado</label></div>
+        <p id="product-form-message" class="form-message" role="status"></p>
+        <div class="product-dialog-actions"><button class="button button-light" type="button" data-product-cancel>Cancelar</button><button class="button button-primary" type="submit">Guardar producto</button></div>
+    </form>
+</dialog>
+<dialog class="product-dialog product-delete-dialog" id="product-delete-dialog" aria-labelledby="product-delete-title">
+    <form method="dialog"><span class="eyebrow" id="product-delete-eyebrow">CONFIRMAR ELIMINACIÓN</span><h2 id="product-delete-title">Eliminar producto</h2><p id="product-delete-message"></p><div class="product-dialog-actions"><button class="button button-light" type="button" data-product-delete-cancel>Cancelar</button><button class="button button-danger" type="button" id="confirm-product-delete">Eliminar</button></div></form>
+</dialog>
+<dialog class="payment-dialog" id="payment-dialog" aria-labelledby="payment-title">
+    <form id="payment-form" data-payment-form="">
+        <span class="eyebrow">CIERRE DE VENTA</span>
+        <h2 id="payment-title">Registrar pago</h2>
+        <label class="field-label">Método de pago<select name="payment_method" required>
+                <option value="bancolombia">Bancolombia</option>
+                <option value="nequi">Nequi</option>
+                <option value="cash">Efectivo</option>
+                <option value="card">Tarjeta</option>
+            </select></label>
+        <div class="payment-dialog-actions"><button class="button button-light" type="button"
+                data-pay-cancel>Cancelar</button><button class="button button-primary" type="submit">Confirmar
+                pago</button></div>
+    </form>
+</dialog>
+<dialog class="receipt-dialog admin-receipt-dialog" id="paid-receipt-dialog" aria-labelledby="paid-receipt-title"
+    data-business-name="{{ business_name }}" data-currency-symbol="{{ currency_symbol }}">
+    <div class="receipt-dialog-header">
+        <div><span class="eyebrow">PAGO REGISTRADO</span><h2 id="paid-receipt-title">Recibo de venta</h2></div>
+        <button class="icon-button" type="button" data-close-paid-receipt aria-label="Cerrar recibo">×</button>
+    </div>
+    <p class="receipt-disclaimer">Recibo interno no fiscal. ¿Deseas imprimirlo?</p>
+    <div class="receipt-preview" id="paid-receipt-preview"></div>
+    <div class="receipt-dialog-actions">
+        <button class="button button-light" type="button" data-close-paid-receipt>No, ahora no</button>
+        <button class="button button-primary" type="button" id="print-paid-receipt">Sí, imprimir recibo</button>
+    </div>
+</dialog>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/panel.js' %}?v=11" defer></script>{% endblock %}

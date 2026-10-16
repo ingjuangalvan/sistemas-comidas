@@ -1,0 +1,133 @@
+.report-summary-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0 0 16px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid var(--line)
+}
+
+.daily-sales-chart {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    min-height: 205px;
+    overflow-x: auto;
+    padding: 12px 2px 4px;
+    border-top: 1px solid var(--line)
+}
+
+.daily-chart-column {
+    display: grid;
+    grid-template-rows: 18px 1fr 20px;
+    gap: 5px;
+    align-items: end;
+    flex: 1 0 48px;
+    min-width: 48px;
+    text-align: center
+}
+
+.daily-chart-column strong {
+    font-size: 9px;
+    white-space: nowrap;
+    color: var(--green)
+}
+
+.daily-chart-column small {
+    font-size: 9px;
+    color: var(--muted);
+    white-space: nowrap
+}
+
+.daily-bar-track {
+    height: 145px;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    background: repeating-linear-gradient(to top, #fff 0, #fff 35px, #eceee8 36px)
+}
+
+.daily-bar-track span {
+    display: block;
+    width: 60%;
+    min-height: 0;
+    background: var(--green);
+    border-radius: 2px 2px 0 0
+}
+
+.product-chart-list {
+    display: grid;
+    gap: 12px
+}
+
+.product-chart-row {
+    display: grid;
+    grid-template-columns: minmax(90px, 1.1fr) minmax(90px, 2fr) 28px 74px;
+    gap: 8px;
+    align-items: center;
+    font-size: 10px
+}
+
+.product-chart-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.product-chart-track {
+    height: 9px;
+    background: #eef0e9
+}
+
+.product-chart-fill {
+    display: block;
+    height: 100%;
+    background: var(--green)
+}
+
+.product-chart-fill-low {
+    background: var(--orange)
+}
+
+.product-chart-row strong {
+    text-align: right
+}
+
+.product-chart-row small {
+    text-align: right;
+    color: var(--muted);
+    white-space: nowrap
+}
+
+.report-chart-box {
+    min-width: 0
+}
+
+@media(max-width:680px) {
+    .report-summary-kpis {
+        gap: 8px;
+        padding: 12px
+    }
+
+    .report-kpis .report-kpi {
+        min-width: 0
+    }
+
+    .report-kpis .report-kpi strong {
+        font-size: 18px
+    }
+
+    .daily-sales-chart {
+        min-height: 185px
+    }
+
+    .daily-bar-track {
+        height: 125px
+    }
+
+    .product-chart-row {
+        grid-template-columns: minmax(80px, 1fr) minmax(65px, 1.4fr) 24px 65px;
+        gap: 5px
+    }
+}

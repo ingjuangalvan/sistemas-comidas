@@ -1,0 +1,41 @@
+.menu-toolbar-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+    flex: 1;
+    min-width: 0
+}
+
+.whatsapp-link {
+    white-space: nowrap;
+    color: var(--green);
+    font-weight: 700;
+    font-size: 11px
+}
+
+.menu-toolbar-actions .category-tabs {
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end
+}
+
+@media(max-width:680px) {
+    .menu-toolbar-actions {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: stretch;
+        margin-top: 15px
+    }
+
+    .whatsapp-link {
+        align-self: flex-end
+    }
+
+    .menu-toolbar-actions .category-tabs {
+        max-width: none;
+        margin-top: 0;
+        flex-wrap: nowrap;
+        justify-content: flex-start
+    }
+}

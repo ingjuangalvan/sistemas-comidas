@@ -1,0 +1,99 @@
+{% extends 'orders/base.html' %}
+{% load static %}
+{% block title %}Carta | {{ business_name }}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/whatsapp.css' %}">
+<link rel="stylesheet" href="{% static 'css/extras.css' %}?v=2">{% endblock %}
+{% block content %}
+<header class="public-header">
+    <a class="brand" href="/"><span class="brand-mark">{{ business_name|slice:':1' }}</span><span>{{ business_name }}<small>COMIDA HECHA AL MOMENTO</small></span></a>
+    <div class="header-actions">
+        <span class="open-status {% if not orders_open %}is-closed{% endif %}" id="open-status">
+            <i></i>
+            <span>{% if orders_open %}Recibimos pedidos{% else %}Pedidos pausados: caja cerrada{% endif %}</span>
+        </span>
+        <button class="icon-button cart-open" type="button" aria-label="Abrir carrito">Bolsa <b id="cart-count">0</b></button>
+    </div>
+</header>
+<main class="menu-layout">
+    <section class="menu-intro">
+        <div class="intro-copy"><span class="eyebrow">ANTOJO RESUELTO</span>
+            <h1>Bueno, rápido<br>y sin complicaciones.</h1>
+                <p>Elige tus favoritos y dinos dónde los llevamos.{% if hours_label %}<br><span class="hours-label">{{ hours_label }}</span>{% endif %}</p>
+        </div>
+        <div class="intro-stamp"><span>HECHO<br>AL MOMENTO</span><b>★</b></div>
+    </section>
+    <div class="menu-toolbar">
+        <div><span class="eyebrow">NUESTRA CARTA</span>
+            <h2>¿Qué se te antoja?</h2>
+        </div>
+        <div class="menu-toolbar-actions">{% if whatsapp %}<a class="whatsapp-link"
+                href="https://wa.me/{{ whatsapp }}?text=Hola%2C%20quiero%20hacer%20un%20pedido" target="_blank"
+                rel="noopener">WhatsApp ↗</a>{% endif %}<div id="category-tabs" class="category-tabs" role="tablist">
+            </div>
+        </div>
+    </div>
+    <div id="menu-grid" class="menu-grid" aria-live="polite">
+        <div class="loading-state">Cargando la carta...</div>
+    </div>
+    <footer class="public-footer"><span>{{ business_name }} </span></footer>
+</main>
+<aside id="cart-drawer" class="cart-drawer" aria-hidden="true">
+    <div class="drawer-backdrop" data-close-cart></div>
+    <section class="cart-panel" aria-label="Tu pedido">
+        <div class="cart-heading">
+            <div><span class="eyebrow">TU PEDIDO</span>
+                <h2>La bolsa <span id="drawer-count">0</span></h2>
+            </div><button class="icon-button" data-close-cart aria-label="Cerrar">×</button>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <p class="empty-state">Tu bolsa está esperando algo rico.</p>
+        </div>
+        <form id="checkout-form" class="checkout-form">
+            <label class="field-label">¿Cómo lo quieres?<select name="kind" id="order-kind">
+                    <option value="table">Para mi mesa</option>
+                    <option value="takeaway">Para llevar</option>
+                    <option value="delivery">A domicilio</option>
+                </select></label>
+            <div class="field-row"><label class="field-label">Tu nombre<input name="customer_name" required
+                        maxlength="120" placeholder="Nombre"></label><label class="field-label">Teléfono<input
+                        name="phone" maxlength="32" inputmode="tel" placeholder="Opcional"></label></div>
+            <label class="field-label conditional-field" id="table-field">Número de mesa<input name="table_number"
+                    maxlength="12" placeholder="Ej. 4"></label>
+            <label class="field-label conditional-field is-hidden" id="address-field">Dirección de entrega<input
+                    name="address" maxlength="240" placeholder="Calle, número, barrio"></label>
+            <label class="field-label">Nota para cocina <span class="muted">(opcional)</span><input name="note"
+                    maxlength="300" placeholder="Sin cebolla, timbre dañado..."></label>
+            <label class="field-label">Método de pago<select name="payment_method">
+                    <option value="bancolombia">Bancolombia</option>
+                    <option value="nequi">Nequi</option>
+                    <option value="cash">Efectivo al recibir</option>
+                    <option value="card">Tarjeta en el local</option>
+                </select></label>
+            <div class="cart-total"><span>Total estimado</span><strong id="cart-total">$0</strong></div>
+            <button class="button button-primary checkout-button" type="submit" {% if not orders_open %}disabled{% endif %}>{% if orders_open %}Confirmar pedido{% else %}Pedidos pausados{% endif %} <span>→</span></button>
+            <p class="form-message" id="checkout-message" role="status"></p>
+        </form>
+    </section>
+</aside>
+<dialog class="receipt-dialog customer-receipt-dialog" id="customer-receipt-dialog" aria-labelledby="customer-receipt-title"
+    data-business-name="{{ business_name }}" data-currency-symbol="{{ currency_symbol }}" data-whatsapp="{{ whatsapp }}">
+    <div class="receipt-dialog-header">
+        <div><span class="eyebrow">PEDIDO RECIBIDO</span><h2 id="customer-receipt-title">Tu comprobante</h2></div>
+        <button class="icon-button" type="button" data-close-customer-receipt aria-label="Cerrar comprobante">×</button>
+    </div>
+    <p class="receipt-disclaimer">Comprobante interno no fiscal. El negocio confirmará tu pedido por WhatsApp.</p>
+    <div class="receipt-image-frame"><canvas id="order-receipt-image" aria-label="Imagen del comprobante de tu pedido"></canvas></div>
+    <p class="receipt-share-hint" id="receipt-share-hint" role="status"></p>
+    <div class="receipt-dialog-actions">
+        <button class="button button-light" type="button" id="download-order-receipt">Descargar imagen</button>
+        <button class="button button-primary" type="button" id="share-order-receipt">Compartir imagen</button>
+    </div>
+    <a class="button button-whatsapp" id="send-order-whatsapp" target="_blank" rel="noopener" hidden>
+        Enviar pedido a WhatsApp del negocio <span>↗</span>
+    </a>
+</dialog>
+<div id="toast" class="toast" role="status"></div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/menu.js' %}?v=7" defer></script>{% endblock %}

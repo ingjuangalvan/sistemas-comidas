@@ -1,0 +1,125 @@
+.denomination-counter {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: #fbfbf8;
+    padding: 16px
+}
+
+.denomination-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    margin-bottom: 8px
+}
+
+.denomination-heading h3 {
+    font-family: var(--serif);
+    font-size: 17px;
+    margin: 4px 0 0
+}
+
+.denomination-heading>span {
+    font-size: 10px;
+    color: var(--muted)
+}
+
+.denomination-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 16px
+}
+
+.denomination-row {
+    display: grid;
+    grid-template-columns: 46px 1fr 68px 82px;
+    align-items: center;
+    gap: 8px;
+    min-height: 39px;
+    border-bottom: 1px solid var(--line);
+    font-size: 11px
+}
+
+.denomination-row strong {
+    color: var(--green);
+    font-size: 12px
+}
+
+.denomination-kind {
+    font-size: 9px;
+    color: var(--muted)
+}
+
+.denomination-row input {
+    width: 68px;
+    height: 30px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 4px 7px;
+    text-align: right;
+    background: #fff
+}
+
+.denomination-row output {
+    text-align: right;
+    color: var(--muted);
+    font-size: 10px
+}
+
+.bills-heading {
+    margin-top: 17px
+}
+
+.denomination-grand-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px solid var(--ink);
+    padding-top: 12px;
+    margin-top: 15px;
+    font-size: 12px;
+    font-weight: 700
+}
+
+.denomination-grand-total strong {
+    font-size: 19px;
+    color: var(--green)
+}
+
+.cash-close-form {
+    display: grid;
+    gap: 14px
+}
+
+.cash-close-submit {
+    justify-self: end
+}
+
+.cash-history-breakdown {
+    max-width: 320px;
+    white-space: normal;
+    line-height: 1.5
+}
+
+@media(max-width:680px) {
+    .denomination-counter {
+        padding: 12px
+    }
+
+    .denomination-list {
+        grid-template-columns: 1fr;
+        gap: 3px
+    }
+
+    .denomination-row {
+        grid-template-columns: 45px 1fr 65px 76px;
+        gap: 6px
+    }
+
+    .denomination-row input {
+        width: 65px
+    }
+
+    .cash-close-submit {
+        width: 100%
+    }
+}

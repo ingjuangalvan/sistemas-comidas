@@ -1,0 +1,44 @@
+.historical-reconcile-form {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f7f8f2;
+    border: 1px solid var(--line)
+}
+
+.historical-reconcile-form p {
+    margin: 0 0 8px;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.5
+}
+
+.historical-reconcile-form .verification-row {
+    grid-template-columns: minmax(100px, 1fr) minmax(90px, .8fr) minmax(110px, 1fr) 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 0
+}
+
+.historical-reconcile-form .verification-row input {
+    grid-column: 3
+}
+
+.historical-reconcile-form button {
+    margin-top: 10px
+}
+
+.reconciliation-audit {
+    display: block;
+    margin-top: 10px;
+    color: var(--muted)
+}
+
+@media(max-width:680px) {
+    .historical-reconcile-form {
+        padding: 8px
+    }
+
+    .historical-reconcile-form .verification-row {
+        grid-template-columns: minmax(80px, 1fr) minmax(70px, .8fr) minmax(90px, 1fr) 0;
+        gap: 5px
+    }
+}

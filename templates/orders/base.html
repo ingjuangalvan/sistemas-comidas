@@ -1,0 +1,24 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f4ef">
+    <title>{% block title %}{{ business_name }}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="stylesheet" href="{% static 'css/design-refresh.css' %}">
+    <link rel="stylesheet" href="{% static 'css/receipt-pos.css' %}">
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    <form hidden>{% csrf_token %}</form>
+    {% block content %}{% endblock %}
+    <script src="{% static 'js/app.js' %}" defer></script>
+    <script src="{% static 'js/receipt-pos.js' %}?v=8" defer></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

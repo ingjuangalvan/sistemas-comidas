@@ -1,0 +1,93 @@
+.extra-list {
+    border: 0;
+    padding: 0;
+    margin: 0 0 15px;
+    display: grid;
+    gap: 5px
+}
+
+.extra-list legend {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    padding: 0 0 6px
+}
+
+.extra-list label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10px;
+    cursor: pointer
+}
+
+.extra-list input {
+    accent-color: var(--green);
+    margin: 0
+}
+
+.extra-list label span {
+    flex: 1
+}
+
+.extra-list label small {
+    color: var(--green);
+    font-weight: 700
+}
+
+.product-observation {
+    display: grid;
+    gap: 5px;
+    margin: 0 0 14px;
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.product-observation span {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.product-observation textarea {
+    width: 100%;
+    min-height: 54px;
+    resize: vertical;
+    padding: 9px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-weight: 400;
+}
+
+.product-observation textarea:focus {
+    border-color: var(--green);
+    outline: 2px solid #24553e24;
+}
+
+.cart-instruction {
+    grid-column: 1 / -1;
+    color: var(--orange) !important;
+}
+
+.product-add:disabled {
+    opacity: .4;
+    cursor: not-allowed
+}
+
+.open-status.is-closed {
+    color: #a84e25
+}
+
+.open-status.is-closed i {
+    background: #dd794c
+}
+
+.hours-label {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--lime);
+    font-size: 12px
+}

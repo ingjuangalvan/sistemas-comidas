@@ -1,0 +1,28 @@
+{% extends 'orders/base.html' %}
+{% block title %}Acceso | {{ business_name }}{% endblock %}
+{% block content %}
+<main class="login-page">
+    <section class="login-story" aria-label="Panel de administración">
+        <a class="brand" href="/"><span class="brand-mark">{{ business_name|slice:':1' }}</span><span>{{ business_name }}<small>PANEL DE ADMINISTRACIÓN</small></span></a>
+        <div class="login-story-copy">
+            <span class="eyebrow">TU NEGOCIO, EN UN SOLO LUGAR</span>
+            <h1>El ritmo del local,<br><em>bajo control.</em></h1>
+            <p>Pedidos, cocina y caja: todo listo para que puedas enfocarte en atender.</p>
+        </div>
+        <div class="login-story-footer"><span class="live-dot"></span> Operación sencilla, servicio extraordinario</div>
+    </section>
+    <section class="login-main">
+        <form class="login-box" method="post">{% csrf_token %}<span class="eyebrow">BIENVENIDO DE NUEVO</span>
+            <h2>Inicia sesión</h2>
+            <p>Usa tus credenciales de administrador para continuar.</p>
+            {% if form.errors %}<div class="alert-message">Usuario o contraseña incorrectos.</div>{% endif %}
+            <label class="field-label">Usuario<input name="username" autocomplete="username" required autofocus></label>
+            <label class="field-label">Contraseña<input type="password" name="password" autocomplete="current-password"
+                    required></label>
+            <input type="hidden" name="next" value="{{ next }}"><button class="button button-primary" type="submit">Entrar
+                al panel <span>→</span></button>
+        </form>
+        
+    </section>
+</main>
+{% endblock %}
