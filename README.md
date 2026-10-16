@@ -66,7 +66,7 @@ $env:BUSINESS_TAX_RATE = "0"
 $env:BUSINESS_DELIVERY_FEE = "5000"
 $env:BUSINESS_HOURS_LABEL = "Todos los días, 12:00 a 22:00"
 $env:BUSINESS_ORDERS_OPEN = "1"
-$env:BUSINESS_WHATSAPP = "573245813427"
+$env:BUSINESS_WHATSAPP = "321*****"
 ```
 
 El impuesto se expresa como porcentaje y la tarifa de domicilio como importe fijo. Usa `BUSINESS_ORDERS_OPEN=0` para pausar pedidos y `1` para volver a recibirlos; `BUSINESS_HOURS_LABEL` es solo el horario informativo visible en la carta. Ajusta la zona horaria a la ubicación del negocio. Si el país exige facturación fiscal, consulta primero los requisitos locales antes de usar el sistema para emitir comprobantes.
