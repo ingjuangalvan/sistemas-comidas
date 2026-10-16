@@ -24,7 +24,7 @@ services:
           name: sistemas-comidas-db
           property: connectionString
       - key: BUSINESS_NAME
-        value: La Esquina Rápida
+        value: SPRINGFIELD
       - key: BUSINESS_CURRENCY
         value: COP
       - key: BUSINESS_CURRENCY_SYMBOL
