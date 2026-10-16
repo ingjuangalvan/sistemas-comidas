@@ -1032,27 +1032,32 @@ tbody tr:hover {
 
     .login-page {
         flex-direction: column;
+        background: linear-gradient(160deg, #173c2a 0%, #1d4839 38%, #0f1d1a 100%);
     }
 
     .login-story {
         flex: 0 0 auto;
         min-height: 0;
-        padding: 28px 24px 18px;
+        padding: 22px 20px 14px;
+    }
+
+    .login-story .brand {
+        font-size: 12px;
     }
 
     .login-story-copy {
-        margin: 40px 0 32px;
+        margin: 22px 0 18px;
     }
 
     .login-story-copy h1 {
         margin: 12px 0;
-        font-size: clamp(2.4rem, 10vw, 3.4rem);
+        font-size: clamp(2.3rem, 9vw, 3.1rem);
     }
 
     .login-story-copy p {
         max-width: 340px;
         margin-bottom: 0;
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .login-story-footer {
@@ -1072,14 +1077,50 @@ tbody tr:hover {
     .login-main {
         flex: 1 0 auto;
         align-items: stretch;
-        padding: 34px 24px 42px;
-        border-radius: 23px 23px 0 0;
+        padding: 12px 20px 36px;
+        border-radius: 22px 22px 0 0;
+        background: rgba(12, 17, 16, 0.78);
     }
 
     .login-box {
         width: 100%;
         max-width: 430px;
         margin: 0 auto;
+        padding: 8px 0 0;
+    }
+
+    .login-box>.eyebrow {
+        font-size: 10px;
+        letter-spacing: 1.7px;
+    }
+
+    .login-box h2 {
+        font-size: 27px;
+    }
+
+    .login-box>p {
+        margin-bottom: 18px;
+        font-size: 12px;
+    }
+
+    .login-box .field-label {
+        margin-bottom: 14px;
+    }
+
+    .login-box .field-label label,
+    .login-box .field-label input {
+        font-size: 14px;
+    }
+
+    .login-box .field-label input {
+        min-height: 46px;
+        border-radius: 9px;
+    }
+
+    .login-box .button {
+        min-height: 46px;
+        margin-top: 6px;
+        font-size: 13px;
     }
 
     .login-main .back-link {
