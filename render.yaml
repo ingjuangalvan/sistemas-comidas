@@ -1,0 +1,35 @@
+databases:
+  - name: sistemas-comidas-db
+    databaseName: sistemas_comidas
+    user: sistemas_comidas
+    plan: free
+
+services:
+  - type: web
+    name: sistemas-comidas
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: .onrender.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sistemas-comidas-db
+          property: connectionString
+      - key: BUSINESS_NAME
+        value: La Esquina Rápida
+      - key: BUSINESS_CURRENCY
+        value: COP
+      - key: BUSINESS_CURRENCY_SYMBOL
+        value: $
+      - key: BUSINESS_WHATSAPP
+        value: "573245813427"
+      - key: DJANGO_TIME_ZONE
+        value: America/Bogota

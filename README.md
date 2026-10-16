@@ -83,6 +83,12 @@ En local, WhatsApp/Meta no puede acceder a `localhost`; durante la integración 
 
 En desarrollo se usa SQLite en `db.sqlite3`. Haz una copia del archivo con la aplicación detenida y guárdala en un lugar protegido. Antes de producción, configura PostgreSQL, HTTPS, `DJANGO_DEBUG=0`, una clave secreta nueva y copias automáticas fuera del servidor. No publiques la base de datos, secretos ni el archivo `.env`.
 
+## Prueba gratuita en Render
+
+El archivo `render.yaml` configura un servicio web Django y una base de datos PostgreSQL en el plan gratuito. Para desplegarlo, crea una cuenta en Render, conecta GitHub y crea un Blueprint desde el repositorio `ingjuangalvan/sistemas-comidas`; selecciona `render.yaml` y aplica el Blueprint. Render generará `DJANGO_SECRET_KEY`, conectará la base de datos y publicará la carta en una dirección `.onrender.com`. Después del primer despliegue, crea el usuario administrador desde la Shell del servicio con `python manage.py createsuperuser`.
+
+Esta configuración es solo para pruebas: Render puede suspender el servicio web gratuito cuando no recibe tráfico y su PostgreSQL gratuito vence a los 30 días; además, el almacenamiento local del servicio no es persistente. No registres pedidos reales ni dependas de conservar datos hasta migrar a un plan y base de datos persistentes.
+
 ## Validación
 
 ```powershell
