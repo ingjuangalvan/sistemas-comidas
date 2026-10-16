@@ -1012,6 +1012,47 @@ class DemoCatalogTests(TestCase):
         self.assertEqual(Product.objects.count(), 13)
 
 
+class BootstrapAdminCommandTests(TestCase):
+    def test_bootstrap_command_creates_admin_only_when_configured_and_is_idempotent(
+        self,
+    ):
+        credentials = {
+            "DJANGO_BOOTSTRAP_ADMIN_USERNAME": "firstadmin",
+            "DJANGO_BOOTSTRAP_ADMIN_EMAIL": "firstadmin@example.com",
+            "DJANGO_BOOTSTRAP_ADMIN_PASSWORD": "V8!xP2#qL9@rT4$wK6",
+        }
+        with patch.dict("os.environ", credentials):
+            call_command("bootstrap_admin", verbosity=0)
+            user = get_user_model().objects.get(username="firstadmin")
+            original_password = user.password
+
+            call_command("bootstrap_admin", verbosity=0)
+
+        user.refresh_from_db()
+        self.assertTrue(user.is_staff)
+        self.assertTrue(user.is_superuser)
+        self.assertTrue(
+            user.check_password(credentials["DJANGO_BOOTSTRAP_ADMIN_PASSWORD"])
+        )
+        self.assertEqual(user.password, original_password)
+        self.assertEqual(user.email, credentials["DJANGO_BOOTSTRAP_ADMIN_EMAIL"])
+
+    def test_bootstrap_command_skips_when_credentials_are_not_configured(self):
+        with patch.dict(
+            "os.environ",
+            {
+                "DJANGO_BOOTSTRAP_ADMIN_USERNAME": "",
+                "DJANGO_BOOTSTRAP_ADMIN_PASSWORD": "",
+                "DJANGO_BOOTSTRAP_ADMIN_EMAIL": "",
+            },
+        ):
+            call_command("bootstrap_admin", verbosity=0)
+
+        self.assertFalse(
+            get_user_model().objects.filter(username="firstadmin").exists()
+        )
+
+
 class RunserverCommandTests(SimpleTestCase):
     def test_runserver_opens_login_in_browser_after_server_binds(self):
         self.assertEqual(get_commands()["runserver"], "orders")
