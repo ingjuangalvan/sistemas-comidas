@@ -6,8 +6,8 @@
 <link rel="stylesheet" href="{% static 'css/cash-denominations.css' %}">
 <link rel="stylesheet" href="{% static 'css/cash-reconciliation.css' %}">
 <link rel="stylesheet" href="{% static 'css/cash-history-reconcile.css' %}">
-<link rel="stylesheet" href="{% static 'css/panel-products.css' %}">
-<link rel="stylesheet" href="{% static 'css/report-charts.css' %}">
+<link rel="stylesheet" href="{% static 'css/panel-products.css' %}?v=28">
+<link rel="stylesheet" href="{% static 'css/report-charts.css' %}?v=28">
 {% endblock %}
 {% block content %}
 <div class="admin-shell">
@@ -22,6 +22,8 @@
                 <button class="nav-item" data-view="products"><span>▧</span> Carta</button>
             <button class="nav-item" data-view="cash"><span>◉</span> Caja</button>
             <button class="nav-item" data-view="reports"><span>▥</span> Informes</button>
+            <button class="nav-item" data-view="expenses"><span>−</span> Gastos</button>
+            <button class="nav-item" data-view="profits"><span>◒</span> Beneficios</button>
             <form class="logout-form" method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button class="nav-item logout-nav-item" type="submit"><span>↗</span> Cerrar sesión</button>
@@ -42,8 +44,8 @@
         </header>
         <section class="view-panel is-visible" id="view-overview">
             <div class="metric-grid">
-                <article class="metric"><span>VENTAS PAGADAS</span><strong id="metric-sales">$0</strong><small
-                        id="metric-sales-note">Hoy</small><i>↗</i></article>
+                <article class="metric"><span>VENTAS DEL MES</span><strong id="metric-sales">$0</strong><small
+                        id="metric-sales-note">Cobros registrados este mes</small><i>↗</i></article>
                 <article class="metric"><span>PEDIDOS DE HOY</span><strong id="metric-orders">0</strong><small
                         id="metric-pending">0 pendientes de pago</small><i>▤</i></article>
                 <article class="metric"><span>PEDIDOS ACTIVOS</span><strong
@@ -51,6 +53,8 @@
                 <article class="metric metric-accent"><span>CAJA ACTUAL</span><strong
                         id="metric-cash">Cerrada</strong><small id="metric-cash-note">Abre tu turno para
                         empezar</small><i>◉</i></article>
+                <article class="metric"><span>COMPROBANTES ANULADOS</span><strong
+                        id="metric-voided-invoices">0</strong><small id="metric-voided-total">$0 · cobrados sin reembolso</small><i>↺</i></article>
             </div>
             <div class="section-heading">
                 <div><span class="eyebrow">EN TIEMPO REAL</span>
@@ -78,19 +82,23 @@
                 </table>
             </div>
             <div class="quick-strip"><span class="live-dot"></span> Actualización automática cada 12 segundos <span
-                    class="strip-divider">·</span><a href="/django-admin/">Gestionar productos y categorías ↗</a></div>
+                    class="strip-divider">·</span></div>
         </section>
         <section class="view-panel" id="view-orders">
             <div class="section-heading section-heading-top">
                 <div><span class="eyebrow">GESTIÓN DE VENTAS</span>
                     <h2>Todos los pedidos</h2>
-                </div><button class="button button-light" id="refresh-orders">↻ Actualizar</button>
+                </div><button class="button button-light" id="refresh-orders" type="button">↻ Actualizar</button>
             </div>
-            <div class="filter-tabs" id="order-filters"><button class="filter-tab is-active"
-                    data-filter="all">Todos</button><button class="filter-tab"
-                    data-filter="received">Recibidos</button><button class="filter-tab" data-filter="preparing">En
-                    preparación</button><button class="filter-tab" data-filter="ready">Preparados</button><button
-                    class="filter-tab" data-filter="delivered">Entregados</button></div>
+            <div class="filter-tabs" id="order-filters" role="group" aria-label="Filtrar pedidos">
+                <button class="filter-tab is-active" data-filter="all" aria-pressed="true">Todos</button>
+                <button class="filter-tab" data-filter="received" aria-pressed="false">Recibidos</button>
+                <button class="filter-tab" data-filter="preparing" aria-pressed="false">En preparación</button>
+                <button class="filter-tab" data-filter="ready" aria-pressed="false">Preparados</button>
+                <button class="filter-tab" data-filter="delivered" aria-pressed="false">Entregados</button>
+                <button class="filter-tab" data-filter="cancelled" aria-pressed="false">Pedidos cancelados</button>
+                <button class="filter-tab" data-filter="invoices-voided" aria-pressed="false">Facturas anuladas</button>
+            </div>
             <div class="order-search-filters">
                 <label class="field-label">Número de pedido
                     <input id="order-number-filter" type="search" placeholder="Buscar número de pedido">
@@ -104,6 +112,7 @@
                 <button class="button button-light" id="clear-order-filters" type="button">Limpiar filtros</button>
             </div>
             <div id="orders-list" class="orders-list"></div>
+            <nav id="orders-pagination" class="orders-pagination" aria-label="Paginación de pedidos"></nav>
         </section>
         <section class="view-panel" id="view-kitchen">
             <div class="section-heading section-heading-top">
@@ -150,7 +159,10 @@
         <section class="view-panel" id="view-products">
             <div class="section-heading section-heading-top">
                 <div><span class="eyebrow">CARTA DEL LOCAL</span><h2>Productos</h2></div>
-                <button class="button button-primary" id="add-product-button" type="button">＋ Agregar producto</button>
+                <div class="section-heading-actions">
+                    <a class="button button-light" href="{% url 'public-menu-qr' %}">Descargar QR de la carta</a>
+                    <button class="button button-primary" id="add-product-button" type="button">＋ Agregar producto</button>
+                </div>
             </div>
             <div class="product-toolbar">
                 <label class="field-label">Buscar producto<input id="product-search" type="search" placeholder="Nombre o descripción"></label>
@@ -159,12 +171,13 @@
             </div>
             <p id="product-feedback" class="product-feedback" role="status"></p>
             <div class="table-wrap">
-                <table>
-                    <thead><tr><th>PRODUCTO</th><th>CATEGORÍA</th><th>PRECIO COP</th><th>ESTADO EN CARTA</th><th>VENTAS</th><th>ACCIONES</th></tr></thead>
-                    <tbody id="products-list"><tr><td colspan="6" class="empty-row">Cargando productos...</td></tr></tbody>
+                <table class="responsive-product-table">
+                    <thead><tr><th>PRODUCTO</th><th>CATEGORÍA</th><th>PRECIO COP</th><th>ESTADO EN CARTA</th><th>EXISTENCIAS</th><th>VENTAS</th><th>ACCIONES</th></tr></thead>
+                    <tbody id="products-list"><tr><td colspan="7" class="empty-row">Cargando productos...</td></tr></tbody>
                 </table>
             </div>
-            <p class="product-footnote">Los productos con ventas se retiran marcándolos como agotados; así se conserva el detalle de pedidos anteriores.</p>
+            <p class="product-footnote">Los productos con ventas se retiran marcándolos como agotados; así se conserva el detalle de pedidos anteriores. Configura las existencias actuales de las bebidas que figuren como “Por configurar” antes de recibir pedidos.</p>
+            <p class="product-footnote">El QR abre una carta pública de solo lectura que se sincroniza con esta lista. Descárgalo desde el dominio publicado para que el enlace funcione en los celulares de tus clientes.</p>
         </section>
         <section class="view-panel" id="view-reports">
             <div class="section-heading section-heading-top">
@@ -172,11 +185,67 @@
                     <h2>Informes de ventas</h2>
                 </div>
             </div>
+            <div class="report-period-shortcuts" role="group" aria-label="Periodos de informe">
+                <button class="filter-tab" type="button" data-report-range="today" aria-pressed="false">Hoy</button>
+                <button class="filter-tab" type="button" data-report-range="week" aria-pressed="false">Esta semana</button>
+                <button class="filter-tab is-active" type="button" data-report-range="month" aria-pressed="true">Este mes</button>
+                <button class="filter-tab" type="button" data-report-range="last-month" aria-pressed="false">Mes anterior</button>
+                <button class="filter-tab" type="button" data-report-range="all" aria-pressed="false">Todas las ventas</button>
+            </div>
             <form class="report-filters" id="report-form"><label class="field-label">Desde<input type="date"
                         name="start" required></label><label class="field-label">Hasta<input type="date" name="end"
                         required></label><button class="button button-primary" type="submit">Consultar</button><button
                     class="button button-light" id="export-csv" type="button">↓ Exportar CSV</button></form>
             <div id="report-content"></div>
+        </section>
+        <section class="view-panel" id="view-expenses">
+            <div class="section-heading section-heading-top">
+                <div><span class="eyebrow">CONTROL DE EGRESOS</span><h2>Gastos del negocio</h2></div>
+            </div>
+            <form class="expense-entry-form" id="expense-form">
+                <label class="field-label">Fecha<input name="expense_date" type="date" required></label>
+                <label class="field-label">Categoría<select name="category" required>
+                    <option value="">Seleccionar</option>
+                    <option value="purchase">Compras</option>
+                    <option value="employees">Pago a empleados</option>
+                    <option value="remodeling">Remodelación</option>
+                    <option value="utilities">Servicios pagados</option>
+                </select></label>
+                <label class="field-label">Valor en COP<input name="amount" type="number" min="0.01" step="0.01" required></label>
+                <label class="field-label expense-description-field">Descripción <span id="expense-description-hint">(obligatoria para remodelación)</span><input name="description" maxlength="240" placeholder="Detalle, proveedor o referencia"></label>
+                <div class="expense-form-actions"><button class="button button-primary" type="submit">Registrar gasto</button><button class="button button-light" id="cancel-expense-edit" type="button" hidden>Cancelar edición</button></div>
+                <p id="expense-form-message" class="form-message" role="status"></p>
+            </form>
+            <form class="report-filters expense-filters" id="expense-filter-form">
+                <label class="field-label">Desde<input name="start" type="date" required></label>
+                <label class="field-label">Hasta<input name="end" type="date" required></label>
+                <label class="field-label">Categoría<select name="category">
+                    <option value="">Todas las categorías</option>
+                    <option value="purchase">Compras</option>
+                    <option value="employees">Pago a empleados</option>
+                    <option value="remodeling">Remodelación</option>
+                    <option value="utilities">Servicios pagados</option>
+                </select></label>
+                <button class="button button-primary" type="submit">Filtrar gastos</button>
+            </form>
+            <div class="expense-summary" id="expense-summary"></div>
+            <div class="table-wrap">
+                <table class="responsive-data-table"><thead><tr><th>FECHA</th><th>GASTO (CATEGORÍA Y DESCRIPCIÓN)</th><th>VALOR</th><th>REGISTRADO POR</th><th>ACCIONES</th></tr></thead>
+                    <tbody id="expense-list"><tr><td colspan="5" class="empty-row">Selecciona un filtro para consultar gastos.</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="view-panel" id="view-profits">
+            <div class="section-heading section-heading-top">
+                <div><span class="eyebrow">RESULTADO DEL NEGOCIO</span><h2>Beneficios por mes</h2></div>
+            </div>
+            <form class="report-filters profit-filters" id="profit-form">
+                <label class="field-label">Desde el mes<input name="start_month" type="month" required></label>
+                <label class="field-label">Hasta el mes<input name="end_month" type="month" required></label>
+                <button class="button button-primary" type="submit">Consultar beneficio</button>
+            </form>
+            <p class="profit-explanation">Al abrir esta sección se muestran los últimos tres meses calendario. El rango se conserva al consultar; puedes cambiarlo si necesitas revisar otro periodo. Beneficio estimado = ventas cobradas menos gastos registrados, sin incluir costos que no hayas ingresado.</p>
+            <div id="profit-content"><p class="empty-state">Selecciona un rango de meses.</p></div>
         </section>
         <footer class="admin-footer">{{ business_name }} <span>· Recibos internos no fiscales</span></footer>
     </main>
@@ -190,6 +259,8 @@
         <label class="field-label">Categoría<select name="category_id" required></select></label>
         <label class="field-label">Descripción<input name="description" maxlength="240"></label>
         <label class="field-label">Precio en COP<input name="price" type="number" min="0" step="0.01" required></label>
+        <label class="product-switch-label" id="stock-tracked-field"><input name="stock_tracked" type="checkbox"> Controlar existencias</label>
+        <label class="field-label" id="stock-quantity-field" hidden>Unidades disponibles<input name="stock_quantity" type="number" min="0" step="1" inputmode="numeric" placeholder="Cantidad actual"></label>
         <div class="product-switches"><label><input name="available" type="checkbox" checked> Disponible para pedir</label><label><input name="featured" type="checkbox"> Destacado</label></div>
         <p id="product-form-message" class="form-message" role="status"></p>
         <div class="product-dialog-actions"><button class="button button-light" type="button" data-product-cancel>Cancelar</button><button class="button button-primary" type="submit">Guardar producto</button></div>
@@ -197,6 +268,32 @@
 </dialog>
 <dialog class="product-dialog product-delete-dialog" id="product-delete-dialog" aria-labelledby="product-delete-title">
     <form method="dialog"><span class="eyebrow" id="product-delete-eyebrow">CONFIRMAR ELIMINACIÓN</span><h2 id="product-delete-title">Eliminar producto</h2><p id="product-delete-message"></p><div class="product-dialog-actions"><button class="button button-light" type="button" data-product-delete-cancel>Cancelar</button><button class="button button-danger" type="button" id="confirm-product-delete">Eliminar</button></div></form>
+</dialog>
+<dialog class="payment-dialog order-edit-dialog" id="order-edit-dialog" aria-labelledby="order-edit-title">
+    <form id="order-edit-form">
+        <span class="eyebrow">PEDIDO RECIBIDO · PENDIENTE DE PAGO</span>
+        <h2 id="order-edit-title">Editar productos</h2>
+        <div id="order-edit-items" class="order-edit-items"></div>
+        <button class="small-button" id="add-order-item" type="button">＋ Agregar producto</button>
+        <div class="payment-dialog-actions">
+            <button class="button button-light" type="button" data-order-edit-cancel>Cancelar</button>
+            <button class="button button-primary" type="submit">Guardar cambios</button>
+        </div>
+    </form>
+</dialog>
+<dialog class="payment-dialog" id="invoice-cancellation-dialog" aria-labelledby="invoice-cancellation-title">
+    <form id="invoice-cancellation-form">
+        <span class="eyebrow">ANULACIÓN DE COMPROBANTE</span>
+        <h2 id="invoice-cancellation-title">Anular comprobante</h2>
+        <p id="invoice-cancellation-reference" class="muted"></p>
+        <p>El comprobante se anulará inmediatamente y se conservará en el historial. Esta acción no registra un reembolso ni revierte el pago cobrado.</p>
+        <label class="field-label">Motivo obligatorio<textarea name="reason" rows="3" maxlength="500" required></textarea></label>
+        <p id="invoice-cancellation-message" class="form-message" role="alert" aria-live="assertive"></p>
+        <div class="payment-dialog-actions">
+            <button class="button button-light" type="button" data-invoice-cancel-cancel>Cancelar</button>
+            <button class="button button-primary" type="submit">Confirmar anulación</button>
+        </div>
+    </form>
 </dialog>
 <dialog class="payment-dialog" id="payment-dialog" aria-labelledby="payment-title">
     <form id="payment-form" data-payment-form="">
@@ -208,6 +305,11 @@
                 <option value="cash">Efectivo</option>
                 <option value="card">Tarjeta</option>
             </select></label>
+        <p class="payment-total">Total a cobrar: <strong id="payment-order-total">$0</strong></p>
+        <label class="field-label" id="cash-received-field">Efectivo recibido
+            <input name="cash_received" type="number" min="0" step="0.01" inputmode="decimal" required>
+        </label>
+        <p id="cash-change-preview" class="cash-change-preview" role="status" aria-live="polite">Vuelto: $0</p>
         <div class="payment-dialog-actions"><button class="button button-light" type="button"
                 data-pay-cancel>Cancelar</button><button class="button button-primary" type="submit">Confirmar
                 pago</button></div>
@@ -228,4 +330,4 @@
 </dialog>
 {% endblock %}
 {% block scripts %}
-<script src="{% static 'js/panel.js' %}?v=11" defer></script>{% endblock %}
+<script src="{% static 'js/panel.js' %}?v=28" defer></script>{% endblock %}

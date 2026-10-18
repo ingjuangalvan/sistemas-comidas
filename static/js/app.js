@@ -4,13 +4,25 @@
         token,
         money(value) {
             const amount = Number(value || 0);
-            return `${window.BUSINESS_CURRENCY_SYMBOL || '$'}${new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(amount)}`;
+            return `${window.BUSINESS_CURRENCY_SYMBOL || '$'}${new Intl.NumberFormat('es-CO', {
+                maximumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+            }).format(amount)}`;
         },
         async request(url, options = {}) {
             const headers = { 'Content-Type': 'application/json', 'X-CSRFToken': token, ...(options.headers || {}) };
             const response = await fetch(url, { ...options, headers });
-            const data = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(data.error || 'No se pudo completar la solicitud.');
+            const body = await response.text();
+            let data = {};
+            try {
+                data = body ? JSON.parse(body) : {};
+            } catch {
+                if (response.ok) {
+                    throw new Error('El servidor respondió en un formato inesperado.');
+                }
+            }
+            if (!response.ok) {
+                throw new Error(data.error || `Error del servidor (${response.status}). Inténtalo de nuevo o consulta los registros.`);
+            }
             return data;
         },
         toast(message) {

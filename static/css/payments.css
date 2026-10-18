@@ -21,6 +21,10 @@
     font-size: 11px
 }
 
+.payment-dialog [hidden] {
+    display: none !important;
+}
+
 .payment-dialog-actions {
     display: flex;
     justify-content: flex-end;
@@ -28,9 +32,113 @@
     margin-top: 20px
 }
 
+.payment-dialog textarea {
+    width: 100%;
+    resize: vertical;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+}
+
+.payment-total {
+    margin: 14px 0;
+    color: var(--muted);
+}
+
+.payment-total strong {
+    color: var(--ink);
+    font-size: 18px;
+}
+
+.cash-change-preview {
+    margin: 8px 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #eff4eb;
+    color: var(--green);
+    font-weight: 700;
+}
+
+.cash-change-preview.is-insufficient {
+    background: #fff1ed;
+    color: #a33223;
+}
+
+.orders-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin: 18px 0;
+}
+
+.orders-pagination:empty {
+    display: none;
+}
+
+.orders-pagination span {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.order-edit-dialog {
+    width: min(760px, calc(100% - 28px));
+}
+
+.order-edit-items {
+    display: grid;
+    gap: 10px;
+    max-height: min(55vh, 520px);
+    overflow-y: auto;
+    margin: 16px 0;
+}
+
+.order-edit-row {
+    display: grid;
+    grid-template-columns: minmax(130px, 1fr) 100px minmax(150px, 1fr) auto;
+    align-items: end;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    background: #fff;
+}
+
+.order-edit-row strong {
+    padding-bottom: 10px;
+}
+
+.order-edit-row .field-label {
+    min-width: 0;
+}
+
+.order-edit-row input,
+.order-edit-row select {
+    width: 100%;
+    min-width: 0;
+}
+
+.invoice-approval-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
 @media(max-width:680px) {
     .payment-dialog-actions .button {
         flex: 1;
         padding: 10px 8px
+    }
+
+    .order-edit-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .order-edit-row strong {
+        grid-column: 1 / -1;
+        padding-bottom: 0;
     }
 }

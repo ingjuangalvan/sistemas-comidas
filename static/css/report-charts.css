@@ -1,6 +1,6 @@
 .report-summary-kpis {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
     gap: 14px;
     margin: 0 0 16px;
     padding: 16px;
@@ -104,8 +104,91 @@
     min-width: 0
 }
 
+.report-period-shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 12px;
+}
+
+.report-period-intro {
+    margin: 0 0 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+}
+
+.report-period-intro p,
+.report-note {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.report-kpi small {
+    display: block;
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.report-financial-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.report-financial-row span {
+    color: var(--muted);
+}
+
+.report-financial-total {
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.report-inventory-box {
+    grid-column: 1 / -1;
+}
+
+.report-inventory-box .table-wrap {
+    margin-top: 12px;
+}
+
+.report-inventory-box td small {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+}
+
+.inventory-status {
+    color: var(--green);
+    font-weight: 700;
+}
+
+.inventory-empty,
+.inventory-unconfigured {
+    color: #a84e25;
+}
+
+.report-content-grid .bar-row {
+    grid-template-columns: minmax(95px, 1fr) minmax(70px, 1.4fr) auto;
+}
+
+.report-content-grid .bar-row small {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    text-align: right;
+}
+
 @media(max-width:680px) {
     .report-summary-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
         padding: 12px
     }
@@ -129,5 +212,369 @@
     .product-chart-row {
         grid-template-columns: minmax(80px, 1fr) minmax(65px, 1.4fr) 24px 65px;
         gap: 5px
+    }
+
+    .report-period-intro {
+        padding: 12px;
+    }
+
+    .report-inventory-box {
+        grid-column: auto;
+    }
+
+    .report-inventory-box table {
+        min-width: 560px;
+    }
+}
+
+    .expense-entry-form {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        align-items: end;
+        margin-bottom: 20px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #fff;
+    }
+
+    .expense-description-field {
+        grid-column: span 2;
+    }
+
+    .expense-description-field span {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 400;
+    }
+
+    .expense-form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .expense-form-message {
+        grid-column: 1 / -1;
+    }
+
+    .expense-filters {
+        flex-wrap: wrap;
+    }
+
+    .expense-summary {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 14px 0;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+    }
+
+    .expense-summary span {
+        color: var(--muted);
+    }
+
+    .expense-actions {
+        display: flex;
+        gap: 6px;
+    }
+
+    .expense-delete-button {
+        color: #a2483e;
+    }
+
+    .profit-filters {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .profit-explanation {
+        margin: 0 0 14px;
+        color: var(--muted);
+        line-height: 1.55;
+    }
+
+    .profit-summary {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .profit-detail-grid {
+        display: grid;
+        grid-template-columns: minmax(240px, .8fr) minmax(0, 1.5fr);
+        gap: 14px;
+    }
+
+    .profit-monthly-table {
+        min-width: 0;
+    }
+
+    .profit-positive {
+        color: #356e39;
+    }
+
+    .profit-negative {
+        color: #a33e39;
+    }
+
+    @media (max-width: 900px) {
+        .expense-entry-form {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .expense-description-field {
+            grid-column: 1 / -1;
+        }
+
+        .profit-detail-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 680px) {
+        .expense-entry-form {
+            grid-template-columns: minmax(0, 1fr);
+            padding: 14px;
+        }
+
+        .expense-description-field {
+            grid-column: auto;
+        }
+
+        .expense-summary {
+            flex-direction: column;
+        }
+
+        .expense-actions {
+            flex-wrap: wrap;
+        }
+
+        .profit-summary {
+            grid-template-columns: 1fr;
+        }
+
+        .profit-monthly-table table {
+            min-width: 500px;
+        }
+    }
+
+.expense-summary {
+    align-items: center;
+    border-color: #dfe8dc;
+    box-shadow: 0 5px 18px #19342108;
+}
+
+.expense-count,
+.expense-total {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.expense-count {
+    font-weight: 700;
+}
+
+.expense-count small,
+.expense-total small {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.expense-total {
+    color: var(--green);
+    font-size: clamp(1.25rem, 3vw, 1.7rem);
+    text-align: right;
+}
+
+.profit-period-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 5px 12px;
+    margin: 0 0 12px;
+    padding: 13px 16px;
+    border-left: 4px solid var(--green);
+    border-radius: 0 10px 10px 0;
+    background: #e9f1e8;
+}
+
+.profit-period-heading .eyebrow {
+    flex-basis: 100%;
+}
+
+.profit-period-heading strong {
+    font-size: 16px;
+    text-transform: capitalize;
+}
+
+.profit-period-heading>span:last-child {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.profit-summary .profit-total-kpi {
+    padding: 12px;
+    border: 1px solid #dce8d6;
+    border-radius: 10px;
+    background: #f3f8ee;
+}
+
+.profit-summary .profit-total-kpi strong {
+    font-size: clamp(1.15rem, 2.5vw, 1.55rem);
+    line-height: 1.35;
+}
+
+.current-month-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #e0ef9d;
+    color: #183d2d;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.profit-monthly-table tr.is-current-month {
+    background: #f3f8ee;
+}
+
+.status-chip,
+.payment-chip {
+    gap: 5px;
+    border: 1px solid currentColor;
+}
+
+.status-chip::before,
+.payment-chip::before {
+    display: inline-block;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.status-received::before {
+    content: "•";
+}
+
+.status-preparing::before {
+    content: "↻";
+}
+
+.status-ready::before {
+    content: "✓";
+}
+
+.status-delivered::before,
+.payment-paid::before {
+    content: "✓";
+}
+
+.status-cancelled::before {
+    content: "×";
+}
+
+.payment-chip:not(.payment-paid)::before {
+    content: "◷";
+}
+
+@media(max-width:680px) {
+    #view-expenses .table-wrap,
+    .profit-monthly-table .table-wrap {
+        overflow: visible;
+        border: 0;
+        background: transparent;
+    }
+
+    #view-expenses .responsive-data-table,
+    .profit-monthly-table .responsive-data-table {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        white-space: normal;
+    }
+
+    #view-expenses .responsive-data-table thead,
+    .profit-monthly-table .responsive-data-table thead {
+        display: none;
+    }
+
+    #expense-list,
+    .profit-monthly-table .responsive-data-table tbody {
+        display: grid;
+        gap: 10px;
+    }
+
+    #expense-list tr,
+    .profit-monthly-table .responsive-data-table tbody tr {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 3px 12px #19342108;
+    }
+
+    #expense-list td,
+    .profit-monthly-table .responsive-data-table td {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        min-width: 0;
+        padding: 10px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    #expense-list td::before,
+    .profit-monthly-table .responsive-data-table td::before {
+        content: attr(data-label);
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    #expense-list td:nth-child(2),
+    #expense-list td:last-child,
+    .profit-monthly-table .responsive-data-table td:first-child,
+    .profit-monthly-table .responsive-data-table td:last-child {
+        grid-column: 1 / -1;
+    }
+
+    #expense-list td:last-child {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #expense-list .empty-row {
+        display: block;
+        grid-column: 1 / -1;
+        text-align: center;
+    }
+
+    #expense-list .empty-row::before {
+        content: none;
+    }
+
+    .expense-actions .small-button {
+        min-height: 40px;
+    }
+
+    .profit-period-heading {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profit-period-heading .eyebrow {
+        flex-basis: auto;
     }
 }

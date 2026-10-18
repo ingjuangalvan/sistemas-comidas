@@ -10,18 +10,18 @@
 
     async function loadMenu() {
         try {
-            menuData = await window.app.request('/api/menu/');
+            menuData = await window.app.request('/api/menu/', {cache: 'no-store'});
             window.BUSINESS_CURRENCY_SYMBOL = menuData.symbol;
             acceptingOrders = menuData.accepting_orders;
-            if (!acceptingOrders) {
-                document.getElementById('open-status').classList.add('is-closed');
-                document.querySelector('#open-status span').textContent = 'Pedidos pausados: caja cerrada';
-            }
+            document.getElementById('open-status').classList.toggle('is-closed', !acceptingOrders);
+            document.querySelector('#open-status span').textContent = acceptingOrders
+                ? 'Recibimos pedidos'
+                : 'Pedidos pausados: caja cerrada';
             renderTabs();
             renderProducts();
             renderCart();
         } catch {
-            grid.innerHTML = '<p class="empty-state">No pudimos cargar la carta. Intenta actualizar la página.</p>';
+            grid.innerHTML = '<p class="alert-message">No pudimos cargar la carta. Intenta actualizar la página.</p>';
         }
     }
 
@@ -33,13 +33,31 @@
     function renderProducts() {
         const categories = activeCategory === 'all' ? menuData.categories : menuData.categories.filter(category => String(category.id) === activeCategory);
         const products = categories.flatMap(category => category.products);
-        grid.innerHTML = products.length ? products.map(product => `
+        grid.innerHTML = products.length ? products.map(product => {
+            const stockConfigured = !product.stock_tracked || product.stock_quantity !== null;
+            const stockAvailable = !product.stock_tracked || product.stock_quantity > 0;
+            const canAdd = acceptingOrders && stockConfigured && stockAvailable;
+            const stockLabel = product.stock_tracked
+                ? product.stock_quantity === null
+                    ? 'Existencias por configurar'
+                    : `Disponibles: ${product.stock_quantity}`
+                : '';
+            const buttonLabel = !stockConfigured
+                ? 'Próximamente'
+                : stockAvailable ? '+' : 'Agotado';
+            return `
       <article class="product-card"><div class="product-top"><div><div class="product-tag">${product.featured ? 'FAVORITO DE LA CASA' : 'PREPARADO AL MOMENTO'}</div><h3>${window.app.escape(product.name)}</h3></div><span class="product-price">${window.app.money(product.price)}</span></div>
-    <p>${window.app.escape(product.description || 'Un clásico de la casa, preparado al momento.')}</p>${product.extras.length ? `<fieldset class="extra-list"><legend>Hazlo a tu gusto</legend>${product.extras.map(extra => `<label><input type="checkbox" data-extra-of="${product.id}" value="${extra.id}" ${acceptingOrders ? '' : 'disabled'}><span>${window.app.escape(extra.name)}</span><small>+${window.app.money(extra.price)}</small></label>`).join('')}</fieldset>` : ''}<label class="product-observation">Observación para este producto <span>(opcional)</span><textarea data-observation-of="${product.id}" maxlength="180" rows="2" placeholder="Ej. sin cebolla" ${acceptingOrders ? '' : 'disabled'}></textarea></label><div class="product-bottom"><span class="eyebrow">${window.app.escape(categories.find(c => c.products.includes(product))?.name || '')}</span><button class="product-add" data-add="${product.id}" aria-label="Agregar ${window.app.escape(product.name)}" ${acceptingOrders ? '' : 'disabled'}>+</button></div></article>`).join('') : '<p class="empty-state">No hay productos disponibles en esta categoría por ahora.</p>';
+    <p>${window.app.escape(product.description || 'Un clásico de la casa, preparado al momento.')}</p>${stockLabel ? `<small class="stock-notice">${window.app.escape(stockLabel)}</small>` : ''}${product.extras.length ? `<fieldset class="extra-list"><legend>Hazlo a tu gusto</legend>${product.extras.map(extra => `<label><input type="checkbox" data-extra-of="${product.id}" value="${extra.id}" ${canAdd ? '' : 'disabled'}><span>${window.app.escape(extra.name)}</span><small>+${window.app.money(extra.price)}</small></label>`).join('')}</fieldset>` : ''}<label class="product-observation">Observación para este producto <span>(opcional)</span><textarea data-observation-of="${product.id}" maxlength="180" rows="2" placeholder="Ej. sin cebolla" ${canAdd ? '' : 'disabled'}></textarea></label><div class="product-bottom"><span class="eyebrow">${window.app.escape(categories.find(c => c.products.includes(product))?.name || '')}</span><button class="product-add" data-add="${product.id}" aria-label="Agregar ${window.app.escape(product.name)}" ${canAdd ? '' : 'disabled'}>${buttonLabel}</button></div></article>`;
+        }).join('') : '<p class="empty-state">No hay productos disponibles en esta categoría por ahora.</p>';
     }
 
     function renderCart() {
         const rows = [...cart.values()];
+        const quantityByProduct = new Map();
+        rows.forEach(row => quantityByProduct.set(
+            row.id,
+            (quantityByProduct.get(row.id) || 0) + row.quantity,
+        ));
         const count = rows.reduce((sum, row) => sum + row.quantity, 0);
         const subtotal = rows.reduce((sum, row) => sum + (Number(row.price) + row.extraTotal) * row.quantity, 0);
         const delivery = document.getElementById('order-kind').value === 'delivery' ? Number(menuData?.delivery_fee || 0) : 0;
@@ -47,7 +65,7 @@
         document.getElementById('drawer-count').textContent = count;
         document.getElementById('cart-total').textContent = window.app.money(subtotal + delivery + subtotal * Number(menuData?.tax_rate || 0) / 100);
         document.getElementById('cart-items').innerHTML = rows.length ? rows.map(row => `
-      <div class="cart-line"><strong>${window.app.escape(row.name)}</strong><span class="quantity-control"><button type="button" data-qty="${row.key}" data-delta="-1" aria-label="Quitar uno">−</button>${row.quantity}<button type="button" data-qty="${row.key}" data-delta="1" aria-label="Agregar uno">+</button></span><small>${window.app.escape(row.extras.map(extra => extra.name).join(', ') || 'Sin extras')}${row.extraTotal ? ` · ${window.app.money(row.extraTotal)} extra` : ''}</small>${row.instructions ? `<small class="cart-instruction">Observación: ${window.app.escape(row.instructions)}</small>` : ''}<small>${window.app.money((Number(row.price) + row.extraTotal) * row.quantity)}</small></div>`).join('') : '<p class="empty-state">Tu bolsa está esperando algo rico.</p>';
+      <div class="cart-line"><strong>${window.app.escape(row.name)}</strong><span class="quantity-control"><button type="button" data-qty="${row.key}" data-delta="-1" aria-label="Quitar uno">−</button>${row.quantity}<button type="button" data-qty="${row.key}" data-delta="1" aria-label="Agregar uno" ${row.stock_tracked && quantityByProduct.get(row.id) >= row.stock_quantity ? 'disabled' : ''}>+</button></span><small>${window.app.escape(row.extras.map(extra => extra.name).join(', ') || 'Sin extras')}${row.extraTotal ? ` · ${window.app.money(row.extraTotal)} extra` : ''}</small>${row.instructions ? `<small class="cart-instruction">Observación: ${window.app.escape(row.instructions)}</small>` : ''}<small>${window.app.money((Number(row.price) + row.extraTotal) * row.quantity)}</small></div>`).join('') : '<p class="empty-state">Tu bolsa está esperando algo rico.</p>';
     }
 
     function orderWhatsAppMessage(order) {
@@ -258,6 +276,18 @@
         const button = event.target.closest('[data-add]');
         if (!button) return;
         const product = menuData.categories.flatMap(category => category.products).find(item => String(item.id) === button.dataset.add);
+        const selectedQuantity = [...cart.values()]
+            .filter(row => row.id === product.id)
+            .reduce((total, row) => total + row.quantity, 0);
+        if (
+            (product.stock_tracked && (
+                product.stock_quantity === null
+                || selectedQuantity >= product.stock_quantity
+            ))
+        ) {
+            window.app.toast('No hay suficientes existencias de este producto.');
+            return;
+        }
         const instructions = grid.querySelector(`[data-observation-of="${product.id}"]`).value.trim();
         const extras = [...grid.querySelectorAll(`[data-extra-of="${product.id}"]:checked`)]
             .map(input => product.extras.find(extra => String(extra.id) === input.value)).filter(Boolean);
@@ -277,7 +307,16 @@
         const button = event.target.closest('[data-qty]');
         if (!button) return;
         const row = cart.get(button.dataset.qty);
-        row.quantity += Number(button.dataset.delta);
+        const delta = Number(button.dataset.delta);
+        const selectedQuantity = [...cart.values()]
+            .filter(item => item.id === row.id)
+            .reduce((total, item) => total + item.quantity, 0);
+        if (
+            delta > 0
+            && row.stock_tracked
+            && selectedQuantity >= row.stock_quantity
+        ) return;
+        row.quantity += delta;
         if (row.quantity <= 0) cart.delete(row.key);
         renderCart();
     });
@@ -328,7 +367,10 @@
             closeCart();
             showOrderReceipt(result.order);
             window.app.toast('Pedido enviado correctamente');
-        } catch (error) { message.textContent = error.message; }
+        } catch (error) {
+            message.textContent = error.message;
+            await loadMenu();
+        }
         finally { button.disabled = false; button.innerHTML = 'Confirmar pedido <span>→</span>'; }
     });
     document.getElementById('order-kind').dispatchEvent(new Event('change'));

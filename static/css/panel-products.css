@@ -6,6 +6,12 @@
     margin: 0 0 12px
 }
 
+.section-heading-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
 .product-toolbar .field-label {
     width: min(360px, 100%);
     margin: 0
@@ -106,11 +112,28 @@
     font-size: 11px
 }
 
+.product-dialog [hidden] {
+    display: none !important
+}
+
 .product-switches {
     display: flex;
     gap: 18px;
     flex-wrap: wrap;
     margin: 8px 0 12px
+}
+
+.product-switch-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 8px 0 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.product-switch-label input {
+    accent-color: var(--green);
 }
 
 .product-switches label {
@@ -144,6 +167,15 @@
 }
 
 @media(max-width:680px) {
+    .section-heading-actions {
+        width: 100%;
+    }
+
+    .section-heading-actions .button {
+        flex: 1;
+        padding: 10px 7px;
+    }
+
     .product-toolbar {
         align-items: stretch;
         flex-direction: column
@@ -170,5 +202,103 @@
         align-items: flex-start;
         flex-direction: column;
         gap: 3px
+    }
+
+    #view-products .table-wrap {
+        overflow: visible;
+        border: 0;
+        background: transparent;
+    }
+
+    .responsive-product-table {
+        display: block;
+        white-space: normal;
+    }
+
+    .responsive-product-table thead {
+        display: none;
+    }
+
+    .responsive-product-table tbody {
+        display: grid;
+        gap: 12px;
+    }
+
+    .responsive-product-table tbody tr:not(.product-category-row):not(.product-empty-row) {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: #fff;
+        box-shadow: 0 4px 14px #19342108;
+    }
+
+    .responsive-product-table tbody tr:not(.product-category-row):not(.product-empty-row) td {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        min-width: 0;
+        padding: 10px 12px;
+        border-top: 1px solid #edf0eb;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .responsive-product-table tbody tr:not(.product-category-row):not(.product-empty-row) td::before {
+        content: attr(data-label);
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    .responsive-product-table tbody tr:not(.product-category-row):not(.product-empty-row) td:first-child,
+    .responsive-product-table tbody tr:not(.product-category-row):not(.product-empty-row) td:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .responsive-product-table tbody tr:not(.product-category-row):not(.product-empty-row) td:first-child {
+        border-top: 0;
+        background: #fbfcfa;
+    }
+
+    .responsive-product-table tbody tr:not(.product-category-row):not(.product-empty-row) td:first-child::before {
+        content: "PRODUCTO";
+    }
+
+    .responsive-product-table tbody tr:not(.product-category-row):not(.product-empty-row) td:last-child {
+        background: #fbfcfa;
+    }
+
+    .product-row-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .product-row-actions .small-button {
+        min-height: 40px;
+        flex: 1 1 auto;
+        white-space: normal;
+    }
+
+    .responsive-product-table .product-category-row {
+        display: block;
+        border: 1px solid #dfe8dc;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .responsive-product-table .product-category-row td {
+        display: block;
+        padding: 10px 12px;
+        border: 0;
+    }
+
+    .responsive-product-table .product-empty-row td {
+        display: block;
+        white-space: normal;
     }
 }

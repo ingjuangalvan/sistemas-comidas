@@ -106,7 +106,10 @@ STORAGES = {
 }
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = not DEBUG
-SECURE_HSTS_SECONDS = 3600 if not DEBUG else 0
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
+# Render's shared domain is not under this app's control, so do not cover its subdomains.
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

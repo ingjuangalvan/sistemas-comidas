@@ -59,6 +59,15 @@
             order.paid_at ? ['Fecha de pago', dateTime(order.paid_at)] : null,
             ['Medio de pago', order.payment_method_label],
             ['Pago', order.payment_status_label],
+            order.invoice?.number ? ['Comprobante', order.invoice.number] : null,
+            order.payment_method === 'cash' && order.invoice?.cash_received !== null
+                && order.invoice?.cash_received !== undefined
+                ? ['Efectivo recibido', window.app.money(order.invoice.cash_received)]
+                : null,
+            order.payment_method === 'cash' && order.invoice?.cash_received !== null
+                && order.invoice?.cash_received !== undefined
+                ? ['Cambio entregado', window.app.money(order.invoice.change_given)]
+                : null,
         ].filter(Boolean);
         const itemRows = order.items.map(item => `
             <section class="item">
@@ -77,7 +86,7 @@
             <article class="pos-receipt ${kitchen ? 'pos-kitchen-receipt' : ''}">
                 <header class="pos-receipt-brand">
                     <strong>${escape(businessName)}</strong>
-                    <span>FACTURA POS · COMPROBANTE INTERNO</span>
+                    <span>COMPROBANTE POS · NO FISCAL</span>
                     <b>PEDIDO #${escape(order.number)}</b>
                 </header>
                 <dl class="pos-receipt-details">${details.map(([label, value]) => `<div><dt>${escape(label)}</dt><dd>${escape(value)}</dd></div>`).join('')}</dl>

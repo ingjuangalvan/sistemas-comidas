@@ -58,8 +58,14 @@
             <div class="field-row"><label class="field-label">Tu nombre<input name="customer_name" required
                         maxlength="120" placeholder="Nombre"></label><label class="field-label">Teléfono<input
                         name="phone" maxlength="32" inputmode="tel" placeholder="Opcional"></label></div>
-            <label class="field-label conditional-field" id="table-field">Número de mesa<input name="table_number"
-                    maxlength="12" placeholder="Ej. 4"></label>
+            <label class="field-label conditional-field" id="table-field">Número de mesa
+                <select name="table_number">
+                    <option value="">Selecciona una mesa</option>
+                    {% for table_number in table_numbers %}
+                    <option value="{{ table_number }}">Mesa {{ table_number }}</option>
+                    {% endfor %}
+                </select>
+            </label>
             <label class="field-label conditional-field is-hidden" id="address-field">Dirección de entrega<input
                     name="address" maxlength="240" placeholder="Calle, número, barrio"></label>
             <label class="field-label">Nota para cocina <span class="muted">(opcional)</span><input name="note"
@@ -96,4 +102,4 @@
 <div id="toast" class="toast" role="status"></div>
 {% endblock %}
 {% block scripts %}
-<script src="{% static 'js/menu.js' %}?v=7" defer></script>{% endblock %}
+<script src="{% static 'js/menu.js' %}?v=8" defer></script>{% endblock %}

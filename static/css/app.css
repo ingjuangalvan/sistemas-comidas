@@ -26,7 +26,7 @@ body {
     background: var(--paper);
     color: var(--ink);
     font-family: var(--sans);
-    font-size: 14px
+    font-size: 15px
 }
 
 button,
@@ -50,7 +50,7 @@ button {
 }
 
 .eyebrow {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 1.3px;
     color: var(--muted)
@@ -351,7 +351,7 @@ h2 {
 }
 
 .product-card p {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.55;
     color: var(--muted);
     margin: 0 0 18px;
@@ -383,7 +383,7 @@ h2 {
 }
 
 .product-tag {
-    font-size: 9px;
+    font-size: 10px;
     color: var(--orange);
     font-weight: 700;
     letter-spacing: .7px;
@@ -402,7 +402,7 @@ h2 {
     padding: 19px 0;
     border-top: 1px solid var(--line);
     font-weight: 600;
-    font-size: 12px
+    font-size: 13px
 }
 
 .public-footer small {
@@ -468,7 +468,7 @@ h2 {
 }
 
 .cart-heading h2 span {
-    font: 600 12px var(--sans);
+    font: 600 13px var(--sans);
     color: var(--muted)
 }
 
@@ -515,7 +515,7 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     margin-bottom: 12px
 }
@@ -568,7 +568,7 @@ h2 {
 .form-message {
     min-height: 18px;
     margin: 10px 0 0;
-    font-size: 12px;
+    font-size: 13px;
     color: var(--green)
 }
 
@@ -596,14 +596,14 @@ h2 {
 .admin-shell {
     min-height: 100vh;
     display: grid;
-    grid-template-columns: 236px 1fr
+    grid-template-columns: 250px 1fr
 }
 
 .sidebar {
     background: #fff;
     border-right: 1px solid var(--line);
     min-height: 100vh;
-    padding: 25px 16px;
+    padding: 26px 17px;
     display: flex;
     flex-direction: column;
     position: sticky;
@@ -613,11 +613,11 @@ h2 {
 
 .sidebar .brand {
     padding: 0 8px 30px;
-    font-size: 13px
+    font-size: 14px
 }
 
 .side-label {
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 1.2px;
     color: #a0a39b;
     padding: 0 11px 10px;
@@ -630,23 +630,23 @@ h2 {
 }
 
 .nav-item {
-    height: 42px;
+    height: 48px;
     border: 0;
     background: transparent;
     text-align: left;
-    padding: 0 11px;
+    padding: 0 13px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 13px;
     color: #656b62;
     border-radius: 3px;
     cursor: pointer;
-    font-size: 12px
+    font-size: 14px
 }
 
 .nav-item>span {
-    font-size: 16px;
-    width: 18px;
+    font-size: 18px;
+    width: 20px;
     text-align: center
 }
 
@@ -676,9 +676,9 @@ h2 {
     background: var(--orange);
     color: #fff;
     border-radius: 50%;
-    font-size: 9px;
-    min-width: 18px;
-    height: 18px;
+    font-size: 10px;
+    min-width: 20px;
+    height: 20px;
     display: grid;
     place-items: center
 }
@@ -694,19 +694,19 @@ h2 {
     align-items: center;
     gap: 9px;
     margin-bottom: 12px;
-    font-size: 11px
+    font-size: 12px
 }
 
 .admin-identity small {
     display: block;
     color: var(--muted);
-    font-size: 10px;
+    font-size: 11px;
     margin-top: 3px
 }
 
 .avatar {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     display: grid;
     place-items: center;
@@ -772,7 +772,7 @@ h2 {
 
 .metric-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 13px
 }
 
@@ -785,7 +785,7 @@ h2 {
 }
 
 .metric>span {
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: .8px;
     color: var(--muted);
     font-weight: 700
@@ -799,7 +799,7 @@ h2 {
 }
 
 .metric>small {
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted)
 }
 
@@ -855,7 +855,7 @@ table {
 }
 
 th {
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: .7px;
     color: #858a80;
     background: #fafaf7;
@@ -866,7 +866,7 @@ th {
 td {
     padding: 13px 14px;
     border-top: 1px solid #eeeee8;
-    font-size: 11px
+    font-size: 12px
 }
 
 .empty-row {
@@ -886,7 +886,7 @@ td {
     align-items: center;
     padding: 5px 8px;
     border-radius: 2px;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     background: #f0f0eb;
     color: #666
@@ -928,7 +928,7 @@ td {
     gap: 8px;
     padding: 13px 0;
     color: var(--muted);
-    font-size: 10px
+    font-size: 11px
 }
 
 .quick-strip a {
@@ -953,7 +953,7 @@ td {
     border: 1px solid var(--line);
     border-radius: 2px;
     padding: 8px 12px;
-    font-size: 11px;
+    font-size: 12px;
     color: #62675f;
     cursor: pointer
 }
@@ -992,7 +992,7 @@ td {
 .order-card-main small,
 .order-card-items {
     color: var(--muted);
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.5
 }
 
@@ -1009,7 +1009,7 @@ td {
     background: #fff;
     padding: 7px 9px;
     border-radius: 2px;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     cursor: pointer
 }
@@ -1040,7 +1040,7 @@ td {
 
 .kitchen-column h3 {
     margin: 0 0 11px;
-    font-size: 11px;
+    font-size: 12px;
     display: flex;
     justify-content: space-between
 }
@@ -1057,8 +1057,23 @@ td {
     box-shadow: 0 3px 10px #00000008
 }
 
+.kitchen-ticket.overdue {
+    border-color: #d98223;
+    background: #fff8ed;
+}
+
+.kitchen-ticket.overdue .ticket-head small {
+    color: #a34f0a;
+    font-weight: 700;
+}
+
 .kitchen-ticket.ready {
     border-color: #78a65c
+}
+
+.kitchen-ticket.overdue.ready {
+    border-color: #d98223;
+    background: #fff8ed;
 }
 
 .ticket-head {
@@ -1069,13 +1084,13 @@ td {
 }
 
 .ticket-head small {
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted);
     font-weight: 400
 }
 
 .ticket-meta {
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted);
     padding: 6px 0;
     border-bottom: 1px solid var(--line)
@@ -1083,7 +1098,7 @@ td {
 
 .ticket-items {
     padding: 9px 0;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.65
 }
 
@@ -1105,7 +1120,7 @@ td {
     border: 0;
     background: var(--green);
     color: #fff;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     cursor: pointer
 }
@@ -1128,7 +1143,7 @@ td {
 .cash-open-panel p {
     grid-column: 1/-1;
     color: var(--muted);
-    font-size: 12px;
+    font-size: 13px;
     margin: 0
 }
 
@@ -1155,7 +1170,7 @@ td {
 
 .cash-summary-item span {
     display: block;
-    font-size: 9px;
+    font-size: 10px;
     color: var(--muted);
     font-weight: 700
 }
@@ -1176,7 +1191,7 @@ td {
     display: flex;
     justify-content: space-between;
     padding: 7px 0;
-    font-size: 12px
+    font-size: 13px
 }
 
 .cash-close-form {
@@ -1230,7 +1245,7 @@ td {
 }
 
 .report-box h3 {
-    font-size: 12px;
+    font-size: 13px;
     margin: 0 0 14px
 }
 
@@ -1243,7 +1258,7 @@ td {
 .report-kpi span {
     display: block;
     color: var(--muted);
-    font-size: 9px
+    font-size: 10px
 }
 
 .report-kpi strong {
@@ -1258,7 +1273,7 @@ td {
     align-items: center;
     gap: 10px;
     margin: 13px 0;
-    font-size: 10px
+    font-size: 11px
 }
 
 .bar-track {
@@ -1282,7 +1297,7 @@ td {
     gap: 10px;
     padding: 10px 0;
     border-bottom: 1px solid var(--line);
-    font-size: 11px
+    font-size: 12px
 }
 
 .top-product-row small {
@@ -1293,7 +1308,7 @@ td {
     border-top: 1px solid var(--line);
     margin-top: 35px;
     padding: 15px 0 20px;
-    font-size: 10px;
+    font-size: 11px;
     color: #747a70
 }
 
@@ -1330,8 +1345,8 @@ td {
 
 .login-box>p {
     color: var(--muted);
-    font-size: 12px;
-    margin-bottom: 23px
+    font-size: 13px;
+    margin-bottom: 23px;
 }
 
 .login-box .button {
@@ -1344,13 +1359,13 @@ td {
     background: #fff0e6;
     color: #9a4c2d;
     margin-bottom: 15px;
-    font-size: 11px
+    font-size: 12px
 }
 
 .back-link {
     margin-top: 19px;
     color: var(--green);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700
 }
 
@@ -1376,9 +1391,15 @@ td {
     }
 }
 
+@media(max-width:1200px) {
+    .metric-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr))
+    }
+}
+
 @media(max-width:950px) {
     .admin-shell {
-        grid-template-columns: 190px 1fr
+        grid-template-columns: 210px 1fr
     }
 
     .admin-main {
@@ -1496,7 +1517,7 @@ td {
         z-index: 30;
         left: 0;
         top: 0;
-        width: 260px;
+        width: min(280px, 86vw);
         transform: translateX(-105%);
         transition: transform .22s;
         box-shadow: var(--shadow)

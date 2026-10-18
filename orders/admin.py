@@ -1,6 +1,17 @@
 from django.contrib import admin
+from django.db.models import Q
 
-from .models import CashSession, Category, Order, OrderItem, OrderStatusLog, Product, ProductExtra
+from .models import (
+    CashSession,
+    Category,
+    InvoiceCancellationRequest,
+    Order,
+    OrderInvoice,
+    OrderItem,
+    OrderStatusLog,
+    Product,
+    ProductExtra,
+)
 
 admin.site.site_header = "Administración del restaurante"
 admin.site.site_title = "Administración del restaurante"
@@ -25,9 +36,17 @@ class ProductExtraInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("name", "category", "price", "available", "featured")
-    list_filter = ("category", "available", "featured")
-    list_editable = ("price", "available", "featured")
+    list_display = (
+        "name",
+        "category",
+        "price",
+        "available",
+        "featured",
+        "stock_tracked",
+        "stock_quantity",
+    )
+    list_filter = ("category", "available", "featured", "stock_tracked")
+    list_editable = ("price", "available", "featured", "stock_tracked", "stock_quantity")
     search_fields = ("name", "description")
     ordering = ("category__sort_order", "name")
     list_per_page = 25
@@ -35,7 +54,18 @@ class ProductAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at",)
     fieldsets = (
         ("Información del producto", {"fields": ("name", "category", "description")}),
-        ("Precio y disponibilidad", {"fields": ("price", "available", "featured")}),
+        (
+            "Precio, disponibilidad e inventario",
+            {
+                "fields": (
+                    "price",
+                    "available",
+                    "featured",
+                    "stock_tracked",
+                    "stock_quantity",
+                )
+            },
+        ),
         ("Registro", {"fields": ("created_at",)}),
     )
     inlines = (ProductExtraInline,)
@@ -48,8 +78,15 @@ class ProductAdmin(admin.ModelAdmin):
 
     @admin.action(description="Volver a ofrecer los productos seleccionados")
     def mark_available(self, request, queryset):
-        updated = queryset.update(available=True)
-        self.message_user(request, f"{updated} producto(s) disponible(s) en la carta.")
+        eligible = queryset.filter(
+            Q(stock_tracked=False) | Q(stock_quantity__gt=0)
+        )
+        updated = eligible.update(available=True)
+        blocked = queryset.count() - updated
+        message = f"{updated} producto(s) disponible(s) en la carta."
+        if blocked:
+            message += f" {blocked} producto(s) necesitan existencias antes de ofrecerse."
+        self.message_user(request, message)
 
 
 @admin.register(ProductExtra)
@@ -63,14 +100,35 @@ class ProductExtraAdmin(admin.ModelAdmin):
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
-    readonly_fields = ("product_name", "unit_price")
+    readonly_fields = (
+        "product",
+        "product_name",
+        "unit_price",
+        "extra_total",
+        "extras_snapshot",
+        "quantity",
+        "instructions",
+    )
+    can_delete = False
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 class OrderStatusLogInline(admin.TabularInline):
     model = OrderStatusLog
     extra = 0
     can_delete = False
-    readonly_fields = ("previous_status", "new_status", "changed_by", "changed_at")
+    readonly_fields = (
+        "previous_status",
+        "new_status",
+        "reason",
+        "changed_by",
+        "changed_at",
+    )
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Order)
@@ -78,8 +136,81 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ("number", "customer_name", "kind", "status", "payment_status", "total", "created_at")
     list_filter = ("status", "kind", "payment_method", "payment_status", "created_at")
     search_fields = ("number", "customer_name", "phone")
-    readonly_fields = ("number", "subtotal", "tax", "total", "created_at", "updated_at")
+    readonly_fields = (
+        "number",
+        "customer_name",
+        "phone",
+        "kind",
+        "table_number",
+        "address",
+        "note",
+        "status",
+        "payment_method",
+        "payment_status",
+        "paid_at",
+        "subtotal",
+        "delivery_fee",
+        "tax",
+        "total",
+        "created_at",
+        "updated_at",
+    )
     inlines = (OrderItemInline, OrderStatusLogInline)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(OrderInvoice)
+class OrderInvoiceAdmin(admin.ModelAdmin):
+    list_display = ("number", "order", "status", "created_at", "voided_at")
+    list_filter = ("status", "created_at")
+    search_fields = ("number", "order__number")
+    readonly_fields = (
+        "order",
+        "number",
+        "status",
+        "created_at",
+        "voided_at",
+        "cash_received",
+        "change_given",
+    )
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(InvoiceCancellationRequest)
+class InvoiceCancellationRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        "invoice",
+        "status",
+        "requested_by",
+        "requested_at",
+        "decided_at",
+    )
+    list_filter = ("status", "requested_at")
+    search_fields = ("invoice__number", "requested_by__username", "reason")
+    readonly_fields = (
+        "invoice",
+        "requested_by",
+        "reason",
+        "status",
+        "requested_at",
+        "decided_at",
+    )
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(CashSession)

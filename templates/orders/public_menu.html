@@ -1,0 +1,32 @@
+{% extends 'orders/base.html' %}
+{% load static %}
+{% block title %}Carta | {{ business_name }}{% endblock %}
+{% block content %}
+<header class="public-header">
+    <a class="brand" href="/"><span class="brand-mark">{{ business_name|slice:':1' }}</span><span>{{ business_name }}<small>NUESTRA CARTA</small></span></a>
+    <span class="public-menu-status" id="public-menu-status" role="status">Carta actualizada automáticamente</span>
+</header>
+<main class="menu-layout">
+    <section class="menu-intro">
+        <div class="intro-copy"><span class="eyebrow">NUESTRA CARTA</span>
+            <h1>Hecho para<br>disfrutar.</h1>
+            <p>Conoce nuestros productos y precios.{% if hours_label %}<br><span class="hours-label">{{ hours_label }}</span>{% endif %}</p>
+        </div>
+        <div class="intro-stamp"><span>HECHO<br>AL MOMENTO</span><b>★</b></div>
+    </section>
+    <div class="menu-toolbar">
+        <div><span class="eyebrow">PRODUCTOS DISPONIBLES</span><h2>La carta</h2></div>
+        <div class="menu-toolbar-actions">
+            <div id="public-category-tabs" class="category-tabs" role="group" aria-label="Filtrar productos por categoría"></div>
+        </div>
+    </div>
+    <div id="public-menu-grid" class="menu-grid" aria-live="polite">
+        <div class="loading-state">Cargando la carta...</div>
+    </div>
+    <footer class="public-footer"><span>{{ business_name }} · Carta informativa, sin pedidos en línea</span></footer>
+</main>
+<div id="toast" class="toast" role="status"></div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/public-menu.js' %}?v=1" defer></script>
+{% endblock %}

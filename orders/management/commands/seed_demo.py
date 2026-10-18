@@ -48,10 +48,14 @@ class Command(BaseCommand):
                 if product is None:
                     product = Product.objects.create(category=category, name=name, **{
                     "description": description, "price": Decimal(price), "featured": featured,
+                    "stock_tracked": "bebida" in category_name.casefold(),
                 })
                 elif product.category_id != category.id:
                     product.category = category
                     product.save(update_fields=["category"])
+                if "bebida" in category_name.casefold() and not product.stock_tracked:
+                    product.stock_tracked = True
+                    product.save(update_fields=["stock_tracked"])
 
         ProductExtra.objects.filter(
             product__name="La Clásica",
